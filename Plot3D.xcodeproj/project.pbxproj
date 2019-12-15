@@ -8,12 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		E104F87823A5B8AF0073D977 /* Plot3D.h in Headers */ = {isa = PBXBuildFile; fileRef = E104F87623A5B8AF0073D977 /* Plot3D.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E104F8A523A6B7C10073D977 /* PlotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E104F8A423A6B7C10073D977 /* PlotView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		E104F87323A5B8AF0073D977 /* Plot3D.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Plot3D.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E104F87623A5B8AF0073D977 /* Plot3D.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Plot3D.h; sourceTree = "<group>"; };
 		E104F87723A5B8AF0073D977 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E104F8A423A6B7C10073D977 /* PlotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlotView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +49,7 @@
 			isa = PBXGroup;
 			children = (
 				E104F87623A5B8AF0073D977 /* Plot3D.h */,
+				E104F8A423A6B7C10073D977 /* PlotView.swift */,
 				E104F87723A5B8AF0073D977 /* Info.plist */,
 			);
 			path = Plot3D;
@@ -95,6 +98,7 @@
 				TargetAttributes = {
 					E104F87223A5B8AF0073D977 = {
 						CreatedOnToolsVersion = 11.2.1;
+						LastSwiftMigration = 1120;
 					};
 				};
 			};
@@ -131,6 +135,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E104F8A523A6B7C10073D977 /* PlotView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,6 +265,7 @@
 		E104F87C23A5B8AF0073D977 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = MXMFDT37J7;
@@ -278,6 +284,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -286,6 +293,7 @@
 		E104F87D23A5B8AF0073D977 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = MXMFDT37J7;
