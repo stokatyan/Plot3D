@@ -38,19 +38,29 @@ public class PlotView: UIView {
     // MARK: - Setup
     
     func setupCamera() {
-      cameraNode.camera = SCNCamera()
-      cameraNode.position = SCNVector3(x: 0, y: 0, z: 10)
-      scene.rootNode.addChildNode(cameraNode)
+        cameraNode.camera = SCNCamera()
+        scene.rootNode.addChildNode(cameraNode)
     }
     
     func setupScene() {
         sceneView.backgroundColor = .black
         sceneView.scene = scene
+        sceneView.autoenablesDefaultLighting = true
     }
     
     func spawnShape() {
-      let geometry = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.3)
-      let geometryNode = SCNNode(geometry: geometry)
-      scene.rootNode.addChildNode(geometryNode)
+        let geometry = SCNBox(width: 0.5, height: 0.5, length: 0.5, chamferRadius: 0.12)
+        geometry.materials.first!.diffuse.contents = UIColor.red
+        let geometryNode = SCNNode(geometry: geometry)
+        
+        let geometry2 = SCNBox(width: 0.5, height: 0.5, length: 0.5, chamferRadius: 0.12)
+        let geometryNode2 = SCNNode(geometry: geometry2)
+        geometryNode2.position = SCNVector3(5, 5, 5)
+
+        scene.rootNode.addChildNode(geometryNode)
+        scene.rootNode.addChildNode(geometryNode2)
+        
+        cameraNode.position = SCNVector3(x: 7.5, y: 7.5, z: -2.5)
+        cameraNode.look(at: SCNVector3(x: 2.5, y: 2.5, z: 2.5))
     }
 }
