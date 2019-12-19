@@ -14,6 +14,9 @@ public class PlotView: UIView {
     
     var sceneView: SCNView
     let scene: SCNScene
+    
+    // Nodes
+    let axisNode: AxisNode
     let cameraNode: SCNNode
     
     // MARK: - Init
@@ -22,13 +25,15 @@ public class PlotView: UIView {
         sceneView = SCNView(frame: CGRect(x: 0, y: 0, width: frame.width, height: frame.height))
         scene = SCNScene()
         cameraNode = SCNNode()
+        axisNode = AxisNode(axisRadius: 0.065, axisHeight: 7, arrowBottomRadius: 0.25, arrowHeight: 0.4)
+        
         super.init(frame: frame)
         addSubview(sceneView)
         
         setupScene()
         setupCamera()
         
-        spawnShape()
+        addGrid()
     }
     
     required init?(coder: NSCoder) {
@@ -40,6 +45,9 @@ public class PlotView: UIView {
     func setupCamera() {
         cameraNode.camera = SCNCamera()
         scene.rootNode.addChildNode(cameraNode)
+        
+        cameraNode.position = SCNVector3(x: 10, y: 10, z: 10)
+        cameraNode.look(at: SCNVector3(x: 0, y: 0, z: 0))
     }
     
     func setupScene() {
@@ -48,19 +56,12 @@ public class PlotView: UIView {
         sceneView.autoenablesDefaultLighting = true
     }
     
-    func spawnShape() {
-        let geometry = SCNBox(width: 0.5, height: 0.5, length: 0.5, chamferRadius: 0.12)
-        geometry.materials.first!.diffuse.contents = UIColor.red
-        let geometryNode = SCNNode(geometry: geometry)
+    func addGrid() {
         
-        let geometry2 = SCNBox(width: 0.5, height: 0.5, length: 0.5, chamferRadius: 0.12)
-        let geometryNode2 = SCNNode(geometry: geometry2)
-        geometryNode2.position = SCNVector3(5, 5, 5)
-
-        scene.rootNode.addChildNode(geometryNode)
-        scene.rootNode.addChildNode(geometryNode2)
         
-        cameraNode.position = SCNVector3(x: 7.5, y: 7.5, z: -2.5)
-        cameraNode.look(at: SCNVector3(x: 2.5, y: 2.5, z: 2.5))
+        scene.rootNode.addChildNode(axisNode)
+        
+        
     }
+
 }

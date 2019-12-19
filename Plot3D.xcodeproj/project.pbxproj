@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		E104F87823A5B8AF0073D977 /* Plot3D.h in Headers */ = {isa = PBXBuildFile; fileRef = E104F87623A5B8AF0073D977 /* Plot3D.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E104F8A523A6B7C10073D977 /* PlotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E104F8A423A6B7C10073D977 /* PlotView.swift */; };
+		E19FEE0123AC0AF800C0E68C /* AxisNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FEE0023AC0AF800C0E68C /* AxisNode.swift */; };
+		E1F9FF7023AB0727003EFA9F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F9FF6F23AB0727003EFA9F /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -16,6 +18,8 @@
 		E104F87623A5B8AF0073D977 /* Plot3D.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Plot3D.h; sourceTree = "<group>"; };
 		E104F87723A5B8AF0073D977 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E104F8A423A6B7C10073D977 /* PlotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlotView.swift; sourceTree = "<group>"; };
+		E19FEE0023AC0AF800C0E68C /* AxisNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AxisNode.swift; sourceTree = "<group>"; };
+		E1F9FF6F23AB0727003EFA9F /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +54,8 @@
 			children = (
 				E104F87623A5B8AF0073D977 /* Plot3D.h */,
 				E104F8A423A6B7C10073D977 /* PlotView.swift */,
+				E19FEE0023AC0AF800C0E68C /* AxisNode.swift */,
+				E1F9FF6F23AB0727003EFA9F /* Extensions.swift */,
 				E104F87723A5B8AF0073D977 /* Info.plist */,
 			);
 			path = Plot3D;
@@ -136,6 +142,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E104F8A523A6B7C10073D977 /* PlotView.swift in Sources */,
+				E19FEE0123AC0AF800C0E68C /* AxisNode.swift in Sources */,
+				E1F9FF7023AB0727003EFA9F /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
