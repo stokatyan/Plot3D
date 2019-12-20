@@ -13,6 +13,8 @@ class AxisNode: SCNNode {
     // MARK: - Properties
     
     // Axis
+    let axisHeight: CGFloat
+    let axisRadius: CGFloat
     let xAxis: SCNGeometry
     let yAxis: SCNGeometry
     let zAxis: SCNGeometry
@@ -37,13 +39,21 @@ class AxisNode: SCNNode {
     let planeXZNode: SCNNode
     let planeYZNode: SCNNode
     
+    // Grid
+    var gridXY = [SCNGeometry]()
+    
     // MARK: - Init
     
     init(axisRadius: CGFloat,
          axisHeight: CGFloat,
          arrowBottomRadius: CGFloat,
-         arrowHeight: CGFloat) {
+         arrowHeight: CGFloat,
+         gridSpacingXY: CGFloat,
+         gridSpacingXZ: CGFloat,
+         gridSpacingYZ: CGFloat) {
         
+        self.axisHeight = axisHeight
+        self.axisRadius = axisRadius
         xAxis = SCNCylinder(radius: axisRadius, height: axisHeight)
         yAxis = SCNCylinder(radius: axisRadius, height: axisHeight)
         zAxis = SCNCylinder(radius: axisRadius, height: axisHeight)
@@ -62,9 +72,9 @@ class AxisNode: SCNNode {
         
         originGeometry = SCNSphere(radius: axisRadius)
         
-        planeXY = SCNPlane(width: 0.5, height: 0.5)
-        planeXZ = SCNPlane(width: 0.5, height: 0.5)
-        planeYZ = SCNPlane(width: 0.5, height: 0.5)
+        planeXY = SCNPlane(width: gridSpacingXY, height: gridSpacingXY)
+        planeXZ = SCNPlane(width: gridSpacingXZ, height: gridSpacingXZ)
+        planeYZ = SCNPlane(width: gridSpacingYZ, height: gridSpacingYZ)
         
         planeXYNode = SCNNode(geometry: planeXY)
         planeXZNode = SCNNode(geometry: planeXZ)
@@ -73,21 +83,33 @@ class AxisNode: SCNNode {
         super.init()
         
         setupAxis(axisHeight: axisHeight)
-        
-        
-        planeXY.materials.first!.diffuse.contents = UIColor.red.withAlphaComponent(0.5)
-        planeXYNode.position = SCNVector3(0.25, 0.25, 0)
-        addChildNode(planeXYNode)
-        
-        planeXZ.materials.first!.diffuse.contents = UIColor.green.withAlphaComponent(0.5)
-        planeXZNode.eulerAngles = SCNVector3(0, Double.pi/2, 0)
-        planeXZNode.position = SCNVector3(0, 0.25, 0.25)
-        addChildNode(planeXZNode)
-        
-        planeYZ.materials.first!.diffuse.contents = UIColor.yellow.withAlphaComponent(0.5)
-        planeYZNode.eulerAngles = SCNVector3(-Double.pi/2, 0, 0)
-        planeYZNode.position = SCNVector3(0.25, 0, 0.25)
-        addChildNode(planeYZNode)
+        setupPlanes(gridSpacingXY: gridSpacingXY, gridSpacingXZ: gridSpacingXZ, gridSpacingYZ: gridSpacingYZ)
+        //xy
+        let xyColor = UIColor.red.withAlphaComponent(0.5)
+        setupGridLines(rootNode: xAxisNode, spacing: gridSpacingXY, direction: SCNVector3(-1, 0, 0), color: xyColor)
+        setupGridLines(rootNode: yAxisNode, spacing: gridSpacingXY, direction: SCNVector3(1, 0, 0), color: xyColor)
+        //xz
+        let xzColor = UIColor.green.withAlphaComponent(0.5)
+        setupGridLines(rootNode: xAxisNode, spacing: gridSpacingXZ, direction: SCNVector3(0, 0, 1), color: xzColor)
+        setupGridLines(rootNode: zAxisNode, spacing: gridSpacingXZ, direction: SCNVector3(1, 0, 0), color: xzColor)
+        //yz
+        let yzColor = UIColor.yellow.withAlphaComponent(0.5)
+        setupGridLines(rootNode: yAxisNode, spacing: gridSpacingYZ, direction: SCNVector3(0, 0, 1), color: yzColor)
+        setupGridLines(rootNode: zAxisNode, spacing: gridSpacingYZ, direction: SCNVector3(0, 0, -1), color: yzColor)
+    }
+    
+    convenience init(axisRadius: CGFloat,
+                     axisHeight: CGFloat,
+                     arrowBottomRadius: CGFloat,
+                     arrowHeight: CGFloat,
+                     gridSpacing: CGFloat) {
+        self.init(axisRadius: axisRadius,
+                  axisHeight: axisHeight,
+                  arrowBottomRadius: arrowBottomRadius,
+                  arrowHeight: arrowHeight,
+                  gridSpacingXY: gridSpacing,
+                  gridSpacingXZ: gridSpacing,
+                  gridSpacingYZ: gridSpacing)
     }
     
     required init?(coder: NSCoder) {
@@ -118,6 +140,40 @@ class AxisNode: SCNNode {
         let originNode = SCNNode(geometry: originGeometry)
         originNode.position = SCNVector3(0, 0, 0)
         addChildNode(originNode)
+    }
+    
+    func setupPlanes(gridSpacingXY: CGFloat, gridSpacingXZ: CGFloat, gridSpacingYZ: CGFloat) {
+        
+        let offsetXY = gridSpacingXY/2
+        planeXY.materials.first!.diffuse.contents = UIColor.red.withAlphaComponent(0.5)
+        planeXYNode.position = SCNVector3(offsetXY, offsetXY, 0)
+        addChildNode(planeXYNode)
+        
+        let offsetXZ = gridSpacingXZ/2
+        planeXZ.materials.first!.diffuse.contents = UIColor.green.withAlphaComponent(0.5)
+        planeXZNode.eulerAngles = SCNVector3(-Double.pi/2, 0, 0)
+        planeXZNode.position = SCNVector3(offsetXZ, 0, offsetXZ)
+        addChildNode(planeXZNode)
+        
+        let offsetYZ = gridSpacingYZ/2
+        planeYZ.materials.first!.diffuse.contents = UIColor.yellow.withAlphaComponent(0.5)
+        planeYZNode.eulerAngles = SCNVector3(0, Double.pi/2, 0)
+        planeYZNode.position = SCNVector3(0, offsetYZ, offsetYZ)
+        addChildNode(planeYZNode)
+    }
+    
+    func setupGridLines(rootNode: SCNNode, spacing: CGFloat, direction: SCNVector3, color: UIColor) {
+        let gridLineRadius = axisRadius/4
+        let lineCount = Int(axisHeight/spacing)
+        for i in 0..<lineCount {
+            let gridLine = SCNCylinder(radius: gridLineRadius, height: axisHeight)
+            gridLine.materials.first!.diffuse.contents = color
+            let gridLineNode = SCNNode(geometry: gridLine)
+            let position = spacing * CGFloat(i + 1)
+            gridLineNode.position = SCNVector3(position, position, position) * direction
+            rootNode.addChildNode(gridLineNode)
+        }
+        
     }
     
 }

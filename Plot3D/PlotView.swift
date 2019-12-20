@@ -25,7 +25,7 @@ public class PlotView: UIView {
         sceneView = SCNView(frame: CGRect(x: 0, y: 0, width: frame.width, height: frame.height))
         scene = SCNScene()
         cameraNode = SCNNode()
-        axisNode = AxisNode(axisRadius: 0.035, axisHeight: 7, arrowBottomRadius: 0.15, arrowHeight: 0.3)
+        axisNode = AxisNode(axisRadius: 0.035, axisHeight: 7, arrowBottomRadius: 0.15, arrowHeight: 0.3, gridSpacing: 1)
         
         super.init(frame: frame)
         addSubview(sceneView)
@@ -46,7 +46,7 @@ public class PlotView: UIView {
         cameraNode.camera = SCNCamera()
         scene.rootNode.addChildNode(cameraNode)
         
-        cameraNode.position = SCNVector3(x: 10, y: 10, z: 10)
+        cameraNode.position = SCNVector3(x: 11, y: 11, z: 11)
         cameraNode.look(at: SCNVector3(x: 0, y: 0, z: 0))
     }
     
