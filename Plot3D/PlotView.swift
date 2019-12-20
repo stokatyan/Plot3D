@@ -25,7 +25,7 @@ public class PlotView: UIView {
         sceneView = SCNView(frame: CGRect(x: 0, y: 0, width: frame.width, height: frame.height))
         scene = SCNScene()
         cameraNode = SCNNode()
-        axisNode = AxisNode(axisRadius: 0.065, axisHeight: 7, arrowBottomRadius: 0.25, arrowHeight: 0.4)
+        axisNode = AxisNode(axisRadius: 0.035, axisHeight: 7, arrowBottomRadius: 0.15, arrowHeight: 0.3)
         
         super.init(frame: frame)
         addSubview(sceneView)
@@ -54,13 +54,11 @@ public class PlotView: UIView {
         sceneView.backgroundColor = .black
         sceneView.scene = scene
         sceneView.autoenablesDefaultLighting = true
+        
+        scene.rootNode.addChildNode(axisNode)
     }
     
     func addGrid() {
-        
-        
-        scene.rootNode.addChildNode(axisNode)
-        
         
     }
 

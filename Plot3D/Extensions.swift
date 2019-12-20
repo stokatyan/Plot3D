@@ -18,7 +18,3 @@ extension SCNGeometry {
         return SCNGeometry(sources: [source], elements: [element])
     }
 }
-
-extension SCNNode {
-
-}
