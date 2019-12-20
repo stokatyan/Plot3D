@@ -25,7 +25,7 @@ public class PlotView: UIView {
         sceneView = SCNView(frame: CGRect(x: 0, y: 0, width: frame.width, height: frame.height))
         scene = SCNScene()
         cameraNode = SCNNode()
-        axisNode = AxisNode(axisRadius: 0.035, axisHeight: 7, arrowBottomRadius: 0.15, arrowHeight: 0.3, gridSpacing: 1)
+        axisNode = AxisNode(config: AxisConfiguration.defaultConfig)
         
         super.init(frame: frame)
         addSubview(sceneView)

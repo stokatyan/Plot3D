@@ -8,6 +8,24 @@
 
 import SceneKit
 
+public struct AxisConfiguration {
+    
+    let axisRadius: CGFloat
+    let axisHeight: CGFloat
+    let arrowBottomRadius: CGFloat
+    let arrowHeight: CGFloat
+    
+    let xyGridSpacing: CGFloat
+    let xzGridSpacing: CGFloat
+    let yzGridSpacing: CGFloat
+    
+    let xyGridColor: UIColor
+    let xzGridColor: UIColor
+    let yzGridColor: UIColor
+    
+    static let defaultConfig = AxisConfiguration(axisRadius: 0.035, axisHeight: 7, arrowBottomRadius: 0.15, arrowHeight: 0.3, xyGridSpacing: 0.5, xzGridSpacing: 0.5, yzGridSpacing: 0.5, xyGridColor: .red, xzGridColor: .green, yzGridColor: .yellow)
+}
+
 class AxisNode: SCNNode {
     
     // MARK: - Properties
@@ -48,9 +66,12 @@ class AxisNode: SCNNode {
          axisHeight: CGFloat,
          arrowBottomRadius: CGFloat,
          arrowHeight: CGFloat,
-         gridSpacingXY: CGFloat,
-         gridSpacingXZ: CGFloat,
-         gridSpacingYZ: CGFloat) {
+         xyGridSpacing: CGFloat,
+         xzGridSpacing: CGFloat,
+         yzGridSpacing: CGFloat,
+         xyGridColor: UIColor,
+         xzGridColor: UIColor,
+         yzGridColor: UIColor) {
         
         self.axisHeight = axisHeight
         self.axisRadius = axisRadius
@@ -72,9 +93,9 @@ class AxisNode: SCNNode {
         
         originGeometry = SCNSphere(radius: axisRadius)
         
-        planeXY = SCNPlane(width: gridSpacingXY, height: gridSpacingXY)
-        planeXZ = SCNPlane(width: gridSpacingXZ, height: gridSpacingXZ)
-        planeYZ = SCNPlane(width: gridSpacingYZ, height: gridSpacingYZ)
+        planeXY = SCNPlane(width: xyGridSpacing, height: xyGridSpacing)
+        planeXZ = SCNPlane(width: xzGridSpacing, height: xzGridSpacing)
+        planeYZ = SCNPlane(width: yzGridSpacing, height: yzGridSpacing)
         
         planeXYNode = SCNNode(geometry: planeXY)
         planeXZNode = SCNNode(geometry: planeXZ)
@@ -83,33 +104,29 @@ class AxisNode: SCNNode {
         super.init()
         
         setupAxis(axisHeight: axisHeight)
-        setupPlanes(gridSpacingXY: gridSpacingXY, gridSpacingXZ: gridSpacingXZ, gridSpacingYZ: gridSpacingYZ)
-        //xy
-        let xyColor = UIColor.red.withAlphaComponent(0.5)
-        setupGridLines(rootNode: xAxisNode, spacing: gridSpacingXY, direction: SCNVector3(-1, 0, 0), color: xyColor)
-        setupGridLines(rootNode: yAxisNode, spacing: gridSpacingXY, direction: SCNVector3(1, 0, 0), color: xyColor)
-        //xz
-        let xzColor = UIColor.green.withAlphaComponent(0.5)
-        setupGridLines(rootNode: xAxisNode, spacing: gridSpacingXZ, direction: SCNVector3(0, 0, 1), color: xzColor)
-        setupGridLines(rootNode: zAxisNode, spacing: gridSpacingXZ, direction: SCNVector3(1, 0, 0), color: xzColor)
-        //yz
-        let yzColor = UIColor.yellow.withAlphaComponent(0.5)
-        setupGridLines(rootNode: yAxisNode, spacing: gridSpacingYZ, direction: SCNVector3(0, 0, 1), color: yzColor)
-        setupGridLines(rootNode: zAxisNode, spacing: gridSpacingYZ, direction: SCNVector3(0, 0, -1), color: yzColor)
+        setupPlanes(gridSpacingXY: xyGridSpacing, gridSpacingXZ: xzGridSpacing, gridSpacingYZ: yzGridSpacing)
+
+        setupGridLines(rootNode: xAxisNode, spacing: xyGridSpacing, direction: SCNVector3(-1, 0, 0), color: xyGridColor)
+        setupGridLines(rootNode: yAxisNode, spacing: xyGridSpacing, direction: SCNVector3(1, 0, 0), color: xyGridColor)
+
+        setupGridLines(rootNode: xAxisNode, spacing: xzGridSpacing, direction: SCNVector3(0, 0, 1), color: xzGridColor)
+        setupGridLines(rootNode: zAxisNode, spacing: xzGridSpacing, direction: SCNVector3(1, 0, 0), color: xzGridColor)
+
+        setupGridLines(rootNode: yAxisNode, spacing: yzGridSpacing, direction: SCNVector3(0, 0, 1), color: yzGridColor)
+        setupGridLines(rootNode: zAxisNode, spacing: yzGridSpacing, direction: SCNVector3(0, 0, -1), color: yzGridColor)
     }
     
-    convenience init(axisRadius: CGFloat,
-                     axisHeight: CGFloat,
-                     arrowBottomRadius: CGFloat,
-                     arrowHeight: CGFloat,
-                     gridSpacing: CGFloat) {
-        self.init(axisRadius: axisRadius,
-                  axisHeight: axisHeight,
-                  arrowBottomRadius: arrowBottomRadius,
-                  arrowHeight: arrowHeight,
-                  gridSpacingXY: gridSpacing,
-                  gridSpacingXZ: gridSpacing,
-                  gridSpacingYZ: gridSpacing)
+    public convenience init(config: AxisConfiguration) {
+        self.init(axisRadius: config.axisRadius,
+                  axisHeight: config.axisHeight,
+                  arrowBottomRadius: config.arrowBottomRadius,
+                  arrowHeight: config.arrowHeight,
+                  xyGridSpacing: config.xyGridSpacing,
+                  xzGridSpacing: config.xzGridSpacing,
+                  yzGridSpacing: config.yzGridSpacing,
+                  xyGridColor: config.xyGridColor,
+                  xzGridColor: config.xzGridColor,
+                  yzGridColor: config.yzGridColor)
     }
     
     required init?(coder: NSCoder) {
