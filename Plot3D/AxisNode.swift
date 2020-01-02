@@ -12,18 +12,29 @@ public struct AxisConfiguration {
     
     let axisRadius: CGFloat
     let axisHeight: CGFloat
+    let gridlineRadius: CGFloat
     let arrowBottomRadius: CGFloat
     let arrowHeight: CGFloat
     
     let xyGridSpacing: CGFloat
     let xzGridSpacing: CGFloat
     let yzGridSpacing: CGFloat
-    
+        
     let xyGridColor: UIColor
     let xzGridColor: UIColor
     let yzGridColor: UIColor
     
-    static let defaultConfig = AxisConfiguration(axisRadius: 0.035, axisHeight: 7, arrowBottomRadius: 0.15, arrowHeight: 0.3, xyGridSpacing: 0.5, xzGridSpacing: 0.5, yzGridSpacing: 0.5, xyGridColor: .red, xzGridColor: .green, yzGridColor: .yellow)
+    static let defaultConfig = AxisConfiguration(axisRadius: 0.035,
+                                                 axisHeight: 7,
+                                                 gridlineRadius: 0.009,
+                                                 arrowBottomRadius: 0.15,
+                                                 arrowHeight: 0.3,
+                                                 xyGridSpacing: 0.5,
+                                                 xzGridSpacing: 0.5,
+                                                 yzGridSpacing: 0.5,
+                                                 xyGridColor: .red,
+                                                 xzGridColor: .green,
+                                                 yzGridColor: .yellow)
 }
 
 class AxisNode: SCNNode {
@@ -33,6 +44,7 @@ class AxisNode: SCNNode {
     // Axis
     let axisHeight: CGFloat
     let axisRadius: CGFloat
+    let gridlineRadius: CGFloat
     let xAxis: SCNGeometry
     let yAxis: SCNGeometry
     let zAxis: SCNGeometry
@@ -62,26 +74,18 @@ class AxisNode: SCNNode {
     
     // MARK: - Init
     
-    init(axisRadius: CGFloat,
-         axisHeight: CGFloat,
-         arrowBottomRadius: CGFloat,
-         arrowHeight: CGFloat,
-         xyGridSpacing: CGFloat,
-         xzGridSpacing: CGFloat,
-         yzGridSpacing: CGFloat,
-         xyGridColor: UIColor,
-         xzGridColor: UIColor,
-         yzGridColor: UIColor) {
+    init(config: AxisConfiguration) {
         
-        self.axisHeight = axisHeight
-        self.axisRadius = axisRadius
+        axisHeight = config.axisHeight
+        axisRadius = config.axisRadius
+        gridlineRadius = config.gridlineRadius
         xAxis = SCNCylinder(radius: axisRadius, height: axisHeight)
         yAxis = SCNCylinder(radius: axisRadius, height: axisHeight)
         zAxis = SCNCylinder(radius: axisRadius, height: axisHeight)
         
-        xAxisArrow = SCNCone(topRadius: 0, bottomRadius: arrowBottomRadius, height: arrowHeight)
-        yAxisArrow = SCNCone(topRadius: 0, bottomRadius: arrowBottomRadius, height: arrowHeight)
-        zAxisArrow = SCNCone(topRadius: 0, bottomRadius: arrowBottomRadius, height: arrowHeight)
+        xAxisArrow = SCNCone(topRadius: 0, bottomRadius: config.arrowBottomRadius, height: config.arrowHeight)
+        yAxisArrow = SCNCone(topRadius: 0, bottomRadius: config.arrowBottomRadius, height: config.arrowHeight)
+        zAxisArrow = SCNCone(topRadius: 0, bottomRadius: config.arrowBottomRadius, height: config.arrowHeight)
         
         xAxisNode = SCNNode(geometry: xAxis)
         yAxisNode = SCNNode(geometry: yAxis)
@@ -92,6 +96,10 @@ class AxisNode: SCNNode {
         zArrowNode = SCNNode(geometry: zAxisArrow)
         
         originGeometry = SCNSphere(radius: axisRadius)
+                
+        let xyGridSpacing = config.xyGridSpacing
+        let xzGridSpacing = config.xzGridSpacing
+        let yzGridSpacing = config.yzGridSpacing
         
         planeXY = SCNPlane(width: xyGridSpacing, height: xyGridSpacing)
         planeXZ = SCNPlane(width: xzGridSpacing, height: xzGridSpacing)
@@ -106,6 +114,9 @@ class AxisNode: SCNNode {
         setupAxis(axisHeight: axisHeight)
         setupPlanes(gridSpacingXY: xyGridSpacing, gridSpacingXZ: xzGridSpacing, gridSpacingYZ: yzGridSpacing)
 
+        let xyGridColor = config.xyGridColor
+        let xzGridColor = config.xzGridColor
+        let yzGridColor = config.yzGridColor
         setupGridLines(rootNode: xAxisNode, spacing: xyGridSpacing, direction: SCNVector3(-1, 0, 0), color: xyGridColor)
         setupGridLines(rootNode: yAxisNode, spacing: xyGridSpacing, direction: SCNVector3(1, 0, 0), color: xyGridColor)
 
@@ -114,19 +125,6 @@ class AxisNode: SCNNode {
 
         setupGridLines(rootNode: yAxisNode, spacing: yzGridSpacing, direction: SCNVector3(0, 0, 1), color: yzGridColor)
         setupGridLines(rootNode: zAxisNode, spacing: yzGridSpacing, direction: SCNVector3(0, 0, -1), color: yzGridColor)
-    }
-    
-    public convenience init(config: AxisConfiguration) {
-        self.init(axisRadius: config.axisRadius,
-                  axisHeight: config.axisHeight,
-                  arrowBottomRadius: config.arrowBottomRadius,
-                  arrowHeight: config.arrowHeight,
-                  xyGridSpacing: config.xyGridSpacing,
-                  xzGridSpacing: config.xzGridSpacing,
-                  yzGridSpacing: config.yzGridSpacing,
-                  xyGridColor: config.xyGridColor,
-                  xzGridColor: config.xzGridColor,
-                  yzGridColor: config.yzGridColor)
     }
     
     required init?(coder: NSCoder) {
@@ -180,17 +178,15 @@ class AxisNode: SCNNode {
     }
     
     func setupGridLines(rootNode: SCNNode, spacing: CGFloat, direction: SCNVector3, color: UIColor) {
-        let gridLineRadius = axisRadius/4
         let lineCount = Int(axisHeight/spacing)
         for i in 0..<lineCount {
-            let gridLine = SCNCylinder(radius: gridLineRadius, height: axisHeight)
+            let gridLine = SCNCylinder(radius: gridlineRadius, height: axisHeight)
             gridLine.materials.first!.diffuse.contents = color
             let gridLineNode = SCNNode(geometry: gridLine)
             let position = spacing * CGFloat(i + 1)
             gridLineNode.position = SCNVector3(position, position, position) * direction
             rootNode.addChildNode(gridLineNode)
         }
-        
     }
     
 }

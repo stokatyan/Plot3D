@@ -32,8 +32,6 @@ public class PlotView: UIView {
         
         setupScene()
         setupCamera()
-        
-        addGrid()
     }
     
     required init?(coder: NSCoder) {
@@ -56,10 +54,6 @@ public class PlotView: UIView {
         sceneView.autoenablesDefaultLighting = true
         
         scene.rootNode.addChildNode(axisNode)
-    }
-    
-    func addGrid() {
-        
     }
 
 }
