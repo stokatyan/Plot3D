@@ -33,12 +33,12 @@ class PlotNode: SCNNode {
     let zArrowNode: SCNNode
     
     // Planes
-    let planeXY: SCNGeometry
-    let planeXZ: SCNGeometry
-    let planeYZ: SCNGeometry
-    let planeXYNode: SCNNode
-    let planeXZNode: SCNNode
-    let planeYZNode: SCNNode
+    let unitPlaneXY: SCNGeometry
+    let unitPlaneXZ: SCNGeometry
+    let unitPlaneYZ: SCNGeometry
+    let unitPlaneXYNode: SCNNode
+    let unitPlaneXZNode: SCNNode
+    let unitPlaneYZNode: SCNNode
     
     // Grid
     var gridXY = [SCNGeometry]()
@@ -81,30 +81,26 @@ class PlotNode: SCNNode {
                                                axisMinValue: config.zMin,
                                                axisHeight: config.axisHeight)
         
-        planeXY = SCNPlane(width: xGridSpacing, height: yGridSpacing)
-        planeXZ = SCNPlane(width: xGridSpacing, height: zGridSpacing)
-        planeYZ = SCNPlane(width: zGridSpacing, height: yGridSpacing)
-        
-        planeXYNode = SCNNode(geometry: planeXY)
-        planeXZNode = SCNNode(geometry: planeXZ)
-        planeYZNode = SCNNode(geometry: planeYZ)
+        unitPlaneXY = SCNPlane(width: xGridSpacing, height: yGridSpacing)
+        unitPlaneXZ = SCNPlane(width: xGridSpacing, height: zGridSpacing)
+        unitPlaneYZ = SCNPlane(width: zGridSpacing, height: yGridSpacing)
+        unitPlaneXYNode = SCNNode(geometry: unitPlaneXY)
+        unitPlaneXZNode = SCNNode(geometry: unitPlaneXZ)
+        unitPlaneYZNode = SCNNode(geometry: unitPlaneYZ)
         
         super.init()
         
         setupAxis(axisHeight: axisHeight)
         setupPlanes(xGridSpacing: xGridSpacing, yGridSpacing: yGridSpacing, zGridSpacing: zGridSpacing)
 
-        let xyGridColor = config.xyGridColor
-        let xzGridColor = config.xzGridColor
-        let yzGridColor = config.yzGridColor
-        setupGridLines(rootNode: xPlotNode, spacing: yGridSpacing, direction: SCNVector3(-1, 0, 0), color: xyGridColor)
-        setupGridLines(rootNode: yPlotNode, spacing: xGridSpacing, direction: SCNVector3(1, 0, 0), color: xyGridColor)
+        setupGridLines(rootNode: xPlotNode, spacing: yGridSpacing, direction: PlotAxis.x.negativeDirection, color: config.xyGridColor)
+        setupGridLines(rootNode: yPlotNode, spacing: xGridSpacing, direction: PlotAxis.x.direction, color: config.xyGridColor)
 
-        setupGridLines(rootNode: xPlotNode, spacing: zGridSpacing, direction: SCNVector3(0, 0, 1), color: xzGridColor)
-        setupGridLines(rootNode: zPlotNode, spacing: xGridSpacing, direction: SCNVector3(1, 0, 0), color: xzGridColor)
+        setupGridLines(rootNode: xPlotNode, spacing: zGridSpacing, direction: PlotAxis.z.direction, color: config.xzGridColor)
+        setupGridLines(rootNode: zPlotNode, spacing: xGridSpacing, direction: PlotAxis.x.direction, color: config.xzGridColor)
 
-        setupGridLines(rootNode: yPlotNode, spacing: zGridSpacing, direction: SCNVector3(0, 0, 1), color: yzGridColor)
-        setupGridLines(rootNode: zPlotNode, spacing: yGridSpacing, direction: SCNVector3(0, 0, -1), color: yzGridColor)
+        setupGridLines(rootNode: yPlotNode, spacing: zGridSpacing, direction: PlotAxis.z.direction, color: config.yzGridColor)
+        setupGridLines(rootNode: zPlotNode, spacing: yGridSpacing, direction: PlotAxis.z.negativeDirection, color: config.yzGridColor)
                 
     }
     
@@ -114,7 +110,7 @@ class PlotNode: SCNNode {
     
     // MARK: - Setup
     
-    func setupAxis(axisHeight: CGFloat) {
+    private func setupAxis(axisHeight: CGFloat) {
         xPlotNode.position = SCNVector3(axisHeight/2, 0, 0)
         xPlotNode.eulerAngles = SCNVector3(0, 0, -Double.pi/2)
         xArrowNode.position = SCNVector3(0, axisHeight/2, 0)
@@ -138,27 +134,27 @@ class PlotNode: SCNNode {
         addChildNode(originNode)
     }
     
-    func setupPlanes(xGridSpacing: CGFloat, yGridSpacing: CGFloat, zGridSpacing: CGFloat) {
+    private func setupPlanes(xGridSpacing: CGFloat, yGridSpacing: CGFloat, zGridSpacing: CGFloat) {
         let xOffset = xGridSpacing/2
         let yOffset = yGridSpacing/2
         let zOffset = zGridSpacing/2
         
-        planeXY.materials.first!.diffuse.contents = UIColor.red.withAlphaComponent(0.5)
-        planeXYNode.position = SCNVector3(xOffset, yOffset, 0)
-        addChildNode(planeXYNode)
+        unitPlaneXY.materials.first!.diffuse.contents = UIColor.red.withAlphaComponent(0.5)
+        unitPlaneXYNode.position = SCNVector3(xOffset, yOffset, 0)
+        addChildNode(unitPlaneXYNode)
         
-        planeXZ.materials.first!.diffuse.contents = UIColor.green.withAlphaComponent(0.5)
-        planeXZNode.eulerAngles = SCNVector3(-Double.pi/2, 0, 0)
-        planeXZNode.position = SCNVector3(xOffset, 0, zOffset)
-        addChildNode(planeXZNode)
+        unitPlaneXZ.materials.first!.diffuse.contents = UIColor.green.withAlphaComponent(0.5)
+        unitPlaneXZNode.eulerAngles = SCNVector3(-Double.pi/2, 0, 0)
+        unitPlaneXZNode.position = SCNVector3(xOffset, 0, zOffset)
+        addChildNode(unitPlaneXZNode)
         
-        planeYZ.materials.first!.diffuse.contents = UIColor.yellow.withAlphaComponent(0.5)
-        planeYZNode.eulerAngles = SCNVector3(0, Double.pi/2, 0)
-        planeYZNode.position = SCNVector3(0, yOffset, zOffset)
-        addChildNode(planeYZNode)
+        unitPlaneYZ.materials.first!.diffuse.contents = UIColor.yellow.withAlphaComponent(0.5)
+        unitPlaneYZNode.eulerAngles = SCNVector3(0, Double.pi/2, 0)
+        unitPlaneYZNode.position = SCNVector3(0, yOffset, zOffset)
+        addChildNode(unitPlaneYZNode)
     }
     
-    func setupGridLines(rootNode: SCNNode, spacing: CGFloat, direction: SCNVector3, color: UIColor) {
+    private func setupGridLines(rootNode: SCNNode, spacing: CGFloat, direction: SCNVector3, color: UIColor) {
         let lineCount = Int(axisHeight/spacing)
         for i in 0..<lineCount {
             let gridLine = SCNCylinder(radius: gridlineRadius, height: axisHeight)
@@ -172,11 +168,11 @@ class PlotNode: SCNNode {
     
     // MARK: - Plotting
     
-    static func coordinate(forValue value: CGFloat, axisMaxValue: CGFloat, axisMinValue: CGFloat, axisHeight: CGFloat) -> CGFloat {
+    private static func coordinate(forValue value: CGFloat, axisMaxValue: CGFloat, axisMinValue: CGFloat, axisHeight: CGFloat) -> CGFloat {
         return value * (axisHeight/(axisMaxValue - axisMinValue))
     }
     
-    func coordinate(forValue value: CGFloat, axisMaxValue: CGFloat, axisMinValue: CGFloat) -> CGFloat {
+    private func coordinate(forValue value: CGFloat, axisMaxValue: CGFloat, axisMinValue: CGFloat) -> CGFloat {
         return PlotNode.coordinate(forValue: value, axisMaxValue: axisMaxValue, axisMinValue: axisMinValue, axisHeight: self.axisHeight)
     }
     
@@ -192,10 +188,17 @@ class PlotNode: SCNNode {
         }
     }
     
-    func plot(points: [PlotPoint]) {
-        plot(points: points.map({ point -> SCNVector3 in
-            return point.vector
-        }))
+    // MARK: Update Configuration
+    
+    func setUnitPlane(_ plane: PlotPlane, isHidden: Bool) {
+        switch plane {
+        case PlotPlane.xy:
+            unitPlaneXYNode.isHidden = isHidden
+        case PlotPlane.xz:
+            unitPlaneXZNode.isHidden = isHidden
+        case PlotPlane.yz:
+            unitPlaneYZNode.isHidden = isHidden
+        }
     }
     
 }

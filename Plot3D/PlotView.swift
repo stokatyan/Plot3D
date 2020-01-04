@@ -60,7 +60,26 @@ public class PlotView: UIView {
     // MARK: - Plotting
     
     public func plot(points: [PlotPoint]) {
+        plotNode.plot(points: points.map({ point -> SCNVector3 in
+            return point.vector
+        }))
+    }
+    
+    public func plot(points: [SCNVector3]) {
         plotNode.plot(points: points)
     }
-
+    
+    
+    // MARK: - Update Configuration
+    
+    public func setUnitPlanes(isHidden: Bool) {
+        plotNode.setUnitPlane(PlotPlane.xy, isHidden: isHidden)
+        plotNode.setUnitPlane(PlotPlane.xz, isHidden: isHidden)
+        plotNode.setUnitPlane(PlotPlane.yz, isHidden: isHidden)
+    }
+    
+    public func setUnitPlan(_ plotPlane: PlotPlane, isHidden: Bool) {
+        plotNode.setUnitPlane(plotPlane, isHidden: isHidden)
+    }
+    
 }
