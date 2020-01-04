@@ -44,7 +44,7 @@ public class PlotView: UIView {
         cameraNode.camera = SCNCamera()
         scene.rootNode.addChildNode(cameraNode)
         
-        cameraNode.position = SCNVector3(x: 11, y: 11, z: 11)
+        cameraNode.position = SCNVector3(x: 18, y: 18, z: 18)
         cameraNode.look(at: SCNVector3(x: 0, y: 0, z: 0))
     }
     
@@ -52,6 +52,7 @@ public class PlotView: UIView {
         sceneView.backgroundColor = .black
         sceneView.scene = scene
         sceneView.autoenablesDefaultLighting = true
+        sceneView.allowsCameraControl = true
         
         scene.rootNode.addChildNode(axisNode)
     }
