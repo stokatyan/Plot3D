@@ -1,5 +1,5 @@
 //
-//  AxisNode.swift
+//  PlotNode.swift
 //  Plot3D
 //
 //  Created by Shant Tokatyan on 12/19/19.
@@ -8,49 +8,7 @@
 
 import SceneKit
 
-public struct AxisConfiguration {
-    
-    let axisRadius: CGFloat
-    let axisHeight: CGFloat
-    let gridlineRadius: CGFloat
-    let arrowBottomRadius: CGFloat
-    let arrowHeight: CGFloat
-    
-    let xTickInterval: CGFloat
-    let yTickInterval: CGFloat
-    let zTickInterval: CGFloat
-        
-    let xMax: CGFloat
-    let yMax: CGFloat
-    let zMax: CGFloat
-    let xMin: CGFloat
-    let yMin: CGFloat
-    let zMin: CGFloat
-    
-    let xyGridColor: UIColor
-    let xzGridColor: UIColor
-    let yzGridColor: UIColor
-    
-    static let defaultConfig = AxisConfiguration(axisRadius: 0.035,
-                                                 axisHeight: 7,
-                                                 gridlineRadius: 0.009,
-                                                 arrowBottomRadius: 0.15,
-                                                 arrowHeight: 0.3,
-                                                 xTickInterval: 1,
-                                                 yTickInterval: 2,
-                                                 zTickInterval: 2.5,
-                                                 xMax: 10,
-                                                 yMax: 10,
-                                                 zMax: 10,
-                                                 xMin: 0,
-                                                 yMin: 0,
-                                                 zMin: 0,
-                                                 xyGridColor: .red,
-                                                 xzGridColor: .green,
-                                                 yzGridColor: .yellow)
-}
-
-class AxisNode: SCNNode {
+class PlotNode: SCNNode {
     
     // MARK: - Properties
     
@@ -61,9 +19,9 @@ class AxisNode: SCNNode {
     let xAxis: SCNGeometry
     let yAxis: SCNGeometry
     let zAxis: SCNGeometry
-    let xAxisNode: SCNNode
-    let yAxisNode: SCNNode
-    let zAxisNode: SCNNode
+    let xPlotNode: SCNNode
+    let yPlotNode: SCNNode
+    let zPlotNode: SCNNode
     let originGeometry: SCNGeometry
     
     // Axis Arrows
@@ -87,7 +45,7 @@ class AxisNode: SCNNode {
     
     // MARK: - Init
     
-    init(config: AxisConfiguration) {
+    init(config: PlotConfiguration) {
         
         axisHeight = config.axisHeight
         axisRadius = config.axisRadius
@@ -100,9 +58,9 @@ class AxisNode: SCNNode {
         yAxisArrow = SCNCone(topRadius: 0, bottomRadius: config.arrowBottomRadius, height: config.arrowHeight)
         zAxisArrow = SCNCone(topRadius: 0, bottomRadius: config.arrowBottomRadius, height: config.arrowHeight)
         
-        xAxisNode = SCNNode(geometry: xAxis)
-        yAxisNode = SCNNode(geometry: yAxis)
-        zAxisNode = SCNNode(geometry: zAxis)
+        xPlotNode = SCNNode(geometry: xAxis)
+        yPlotNode = SCNNode(geometry: yAxis)
+        zPlotNode = SCNNode(geometry: zAxis)
         
         xArrowNode = SCNNode(geometry: xAxisArrow)
         yArrowNode = SCNNode(geometry: yAxisArrow)
@@ -110,15 +68,15 @@ class AxisNode: SCNNode {
         
         originGeometry = SCNSphere(radius: axisRadius)
                 
-        let xGridSpacing = AxisNode.coordinate(forValue: config.xTickInterval,
+        let xGridSpacing = PlotNode.coordinate(forValue: config.xTickInterval,
                                                axisMaxValue: config.xMax,
                                                axisMinValue: config.xMin,
                                                axisHeight: config.axisHeight)
-        let yGridSpacing = AxisNode.coordinate(forValue: config.yTickInterval,
+        let yGridSpacing = PlotNode.coordinate(forValue: config.yTickInterval,
                                                axisMaxValue: config.yMax,
                                                axisMinValue: config.yMin,
                                                axisHeight: config.axisHeight)
-        let zGridSpacing = AxisNode.coordinate(forValue: config.zTickInterval,
+        let zGridSpacing = PlotNode.coordinate(forValue: config.zTickInterval,
                                                axisMaxValue: config.zMax,
                                                axisMinValue: config.zMin,
                                                axisHeight: config.axisHeight)
@@ -139,14 +97,14 @@ class AxisNode: SCNNode {
         let xyGridColor = config.xyGridColor
         let xzGridColor = config.xzGridColor
         let yzGridColor = config.yzGridColor
-        setupGridLines(rootNode: xAxisNode, spacing: yGridSpacing, direction: SCNVector3(-1, 0, 0), color: xyGridColor)
-        setupGridLines(rootNode: yAxisNode, spacing: xGridSpacing, direction: SCNVector3(1, 0, 0), color: xyGridColor)
+        setupGridLines(rootNode: xPlotNode, spacing: yGridSpacing, direction: SCNVector3(-1, 0, 0), color: xyGridColor)
+        setupGridLines(rootNode: yPlotNode, spacing: xGridSpacing, direction: SCNVector3(1, 0, 0), color: xyGridColor)
 
-        setupGridLines(rootNode: xAxisNode, spacing: zGridSpacing, direction: SCNVector3(0, 0, 1), color: xzGridColor)
-        setupGridLines(rootNode: zAxisNode, spacing: xGridSpacing, direction: SCNVector3(1, 0, 0), color: xzGridColor)
+        setupGridLines(rootNode: xPlotNode, spacing: zGridSpacing, direction: SCNVector3(0, 0, 1), color: xzGridColor)
+        setupGridLines(rootNode: zPlotNode, spacing: xGridSpacing, direction: SCNVector3(1, 0, 0), color: xzGridColor)
 
-        setupGridLines(rootNode: yAxisNode, spacing: zGridSpacing, direction: SCNVector3(0, 0, 1), color: yzGridColor)
-        setupGridLines(rootNode: zAxisNode, spacing: yGridSpacing, direction: SCNVector3(0, 0, -1), color: yzGridColor)
+        setupGridLines(rootNode: yPlotNode, spacing: zGridSpacing, direction: SCNVector3(0, 0, 1), color: yzGridColor)
+        setupGridLines(rootNode: zPlotNode, spacing: yGridSpacing, direction: SCNVector3(0, 0, -1), color: yzGridColor)
                 
     }
     
@@ -157,22 +115,22 @@ class AxisNode: SCNNode {
     // MARK: - Setup
     
     func setupAxis(axisHeight: CGFloat) {
-        xAxisNode.position = SCNVector3(axisHeight/2, 0, 0)
-        xAxisNode.eulerAngles = SCNVector3(0, 0, -Double.pi/2)
+        xPlotNode.position = SCNVector3(axisHeight/2, 0, 0)
+        xPlotNode.eulerAngles = SCNVector3(0, 0, -Double.pi/2)
         xArrowNode.position = SCNVector3(0, axisHeight/2, 0)
-        xAxisNode.addChildNode(xArrowNode)
-        addChildNode(xAxisNode)
+        xPlotNode.addChildNode(xArrowNode)
+        addChildNode(xPlotNode)
 
-        yAxisNode.position = SCNVector3(0, axisHeight/2, 0)
+        yPlotNode.position = SCNVector3(0, axisHeight/2, 0)
         yArrowNode.position = SCNVector3(0, axisHeight/2, 0)
-        yAxisNode.addChildNode(yArrowNode)
-        addChildNode(yAxisNode)
+        yPlotNode.addChildNode(yArrowNode)
+        addChildNode(yPlotNode)
         
-        zAxisNode.position = SCNVector3(0, 0, axisHeight/2)
-        zAxisNode.eulerAngles = SCNVector3(Double.pi/2, 0, 0)
+        zPlotNode.position = SCNVector3(0, 0, axisHeight/2)
+        zPlotNode.eulerAngles = SCNVector3(Double.pi/2, 0, 0)
         zArrowNode.position = SCNVector3(0, axisHeight/2, 0)
-        zAxisNode.addChildNode(zArrowNode)
-        addChildNode(zAxisNode)
+        zPlotNode.addChildNode(zArrowNode)
+        addChildNode(zPlotNode)
 
         originGeometry.materials.first!.diffuse.contents = UIColor.white
         let originNode = SCNNode(geometry: originGeometry)
@@ -219,7 +177,7 @@ class AxisNode: SCNNode {
     }
     
     func coordinate(forValue value: CGFloat, axisMaxValue: CGFloat, axisMinValue: CGFloat) -> CGFloat {
-        return AxisNode.coordinate(forValue: value, axisMaxValue: axisMaxValue, axisMinValue: axisMinValue, axisHeight: self.axisHeight)
+        return PlotNode.coordinate(forValue: value, axisMaxValue: axisMaxValue, axisMinValue: axisMinValue, axisHeight: self.axisHeight)
     }
     
     func plot(points: [SCNVector3]) {

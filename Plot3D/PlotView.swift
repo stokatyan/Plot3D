@@ -16,7 +16,7 @@ public class PlotView: UIView {
     let scene: SCNScene
     
     // Nodes
-    let axisNode: AxisNode
+    let plotNode: PlotNode
     let cameraNode: SCNNode
     
     // MARK: - Init
@@ -25,7 +25,7 @@ public class PlotView: UIView {
         sceneView = SCNView(frame: CGRect(x: 0, y: 0, width: frame.width, height: frame.height))
         scene = SCNScene()
         cameraNode = SCNNode()
-        axisNode = AxisNode(config: AxisConfiguration.defaultConfig)
+        plotNode = PlotNode(config: PlotConfiguration.defaultConfig)
         
         super.init(frame: frame)
         addSubview(sceneView)
@@ -54,13 +54,13 @@ public class PlotView: UIView {
         sceneView.autoenablesDefaultLighting = true
         sceneView.allowsCameraControl = true
         
-        scene.rootNode.addChildNode(axisNode)
+        scene.rootNode.addChildNode(plotNode)
     }
     
     // MARK: - Plotting
     
     public func plot(points: [PlotPoint]) {
-        axisNode.plot(points: points)
+        plotNode.plot(points: points)
     }
 
 }
