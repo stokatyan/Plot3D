@@ -55,5 +55,11 @@ public class PlotView: UIView {
         
         scene.rootNode.addChildNode(axisNode)
     }
+    
+    // MARK: - Plotting
+    
+    public func plot(points: [PlotPoint]) {
+        axisNode.plot(points: points)
+    }
 
 }

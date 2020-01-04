@@ -29,9 +29,9 @@ public struct AxisConfiguration {
                                                  gridlineRadius: 0.009,
                                                  arrowBottomRadius: 0.15,
                                                  arrowHeight: 0.3,
-                                                 xyGridSpacing: 0.5,
-                                                 xzGridSpacing: 0.5,
-                                                 yzGridSpacing: 0.5,
+                                                 xyGridSpacing: 1,
+                                                 xzGridSpacing: 1,
+                                                 yzGridSpacing: 1,
                                                  xyGridColor: .red,
                                                  xzGridColor: .green,
                                                  yzGridColor: .yellow)
@@ -125,6 +125,7 @@ class AxisNode: SCNNode {
 
         setupGridLines(rootNode: yAxisNode, spacing: yzGridSpacing, direction: SCNVector3(0, 0, 1), color: yzGridColor)
         setupGridLines(rootNode: zAxisNode, spacing: yzGridSpacing, direction: SCNVector3(0, 0, -1), color: yzGridColor)
+                
     }
     
     required init?(coder: NSCoder) {
@@ -187,6 +188,30 @@ class AxisNode: SCNNode {
             gridLineNode.position = SCNVector3(position, position, position) * direction
             rootNode.addChildNode(gridLineNode)
         }
+    }
+    
+    // MARK: - Plotting
+    
+    func coordinate(forValue value: Float, axisMaxValue: Float) -> Float {
+        return value * (Float(axisHeight)/axisMaxValue)
+    }
+    
+    func plot(points: [SCNVector3]) {
+        for point in points {
+            let plotShape = SCNSphere(radius: 0.1)
+            let pointNode = SCNNode(geometry: plotShape)
+            let x = coordinate(forValue: point.x, axisMaxValue: 10)
+            let y = coordinate(forValue: point.y, axisMaxValue: 10)
+            let z = coordinate(forValue: point.z, axisMaxValue: 10)
+            pointNode.position = SCNVector3(x, y, z)
+            addChildNode(pointNode)
+        }
+    }
+    
+    func plot(points: [PlotPoint]) {
+        plot(points: points.map({ point -> SCNVector3 in
+            return point.vector
+        }))
     }
     
 }
