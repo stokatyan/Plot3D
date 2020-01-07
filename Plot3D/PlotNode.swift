@@ -39,6 +39,9 @@ class PlotNode: SCNNode {
     let unitPlaneXYNode: SCNNode
     let unitPlaneXZNode: SCNNode
     let unitPlaneYZNode: SCNNode
+    let xyPlaneNode = SCNNode()
+    let xzPlaneNode = SCNNode()
+    let yzPlaneNode = SCNNode()
     
     // Grid
     var gridXY = [SCNGeometry]()
@@ -91,17 +94,21 @@ class PlotNode: SCNNode {
         super.init()
         
         setupAxis(axisHeight: axisHeight)
-        setupPlanes(xGridSpacing: xGridSpacing, yGridSpacing: yGridSpacing, zGridSpacing: zGridSpacing)
-
-        setupGridLines(rootNode: xPlotNode, spacing: yGridSpacing, direction: PlotAxis.x.negativeDirection, color: config.xyGridColor)
-        setupGridLines(rootNode: yPlotNode, spacing: xGridSpacing, direction: PlotAxis.x.direction, color: config.xyGridColor)
-
-        setupGridLines(rootNode: xPlotNode, spacing: zGridSpacing, direction: PlotAxis.z.direction, color: config.xzGridColor)
-        setupGridLines(rootNode: zPlotNode, spacing: xGridSpacing, direction: PlotAxis.x.direction, color: config.xzGridColor)
-
-        setupGridLines(rootNode: yPlotNode, spacing: zGridSpacing, direction: PlotAxis.z.direction, color: config.yzGridColor)
-        setupGridLines(rootNode: zPlotNode, spacing: yGridSpacing, direction: PlotAxis.z.negativeDirection, color: config.yzGridColor)
-                
+        setupUnitPlanes(xGridSpacing: xGridSpacing, yGridSpacing: yGridSpacing, zGridSpacing: zGridSpacing, config: config)
+        
+        // xy plane
+        addGridLines(rootNode: xPlotNode, spacing: yGridSpacing, direction: PlotAxis.x.negativeDirection, color: config.xyGridColor)
+        addGridLines(rootNode: yPlotNode, spacing: xGridSpacing, direction: PlotAxis.x.direction, color: config.xyGridColor)
+        // xz plane
+        addGridLines(rootNode: xPlotNode, spacing: zGridSpacing, direction: PlotAxis.z.direction, color: config.xzGridColor)
+        addGridLines(rootNode: zPlotNode, spacing: xGridSpacing, direction: PlotAxis.x.direction, color: config.xzGridColor)
+        // yz plane
+        addGridLines(rootNode: yPlotNode, spacing: zGridSpacing, direction: PlotAxis.z.direction, color: config.yzGridColor)
+        addGridLines(rootNode: zPlotNode, spacing: yGridSpacing, direction: PlotAxis.z.negativeDirection, color: config.yzGridColor)
+        
+        addWall(plane: .xy, color: config.xyGridColor.withAlphaComponent(0.25), wallThickness: config.wallThickness)
+        addWall(plane: .xz, color: config.xzGridColor.withAlphaComponent(0.25), wallThickness: config.wallThickness)
+        addWall(plane: .yz, color: config.yzGridColor.withAlphaComponent(0.25), wallThickness: config.wallThickness)
     }
     
     required init?(coder: NSCoder) {
@@ -134,27 +141,27 @@ class PlotNode: SCNNode {
         addChildNode(originNode)
     }
     
-    private func setupPlanes(xGridSpacing: CGFloat, yGridSpacing: CGFloat, zGridSpacing: CGFloat) {
+    private func setupUnitPlanes(xGridSpacing: CGFloat, yGridSpacing: CGFloat, zGridSpacing: CGFloat, config: PlotConfiguration) {
         let xOffset = xGridSpacing/2
         let yOffset = yGridSpacing/2
         let zOffset = zGridSpacing/2
         
-        unitPlaneXY.materials.first!.diffuse.contents = UIColor.red.withAlphaComponent(0.5)
+        unitPlaneXY.materials.first!.diffuse.contents = config.xyGridColor
         unitPlaneXYNode.position = SCNVector3(xOffset, yOffset, 0)
         addChildNode(unitPlaneXYNode)
         
-        unitPlaneXZ.materials.first!.diffuse.contents = UIColor.green.withAlphaComponent(0.5)
+        unitPlaneXZ.materials.first!.diffuse.contents = config.xzGridColor
         unitPlaneXZNode.eulerAngles = SCNVector3(-Double.pi/2, 0, 0)
         unitPlaneXZNode.position = SCNVector3(xOffset, 0, zOffset)
         addChildNode(unitPlaneXZNode)
         
-        unitPlaneYZ.materials.first!.diffuse.contents = UIColor.yellow.withAlphaComponent(0.5)
+        unitPlaneYZ.materials.first!.diffuse.contents = config.yzGridColor
         unitPlaneYZNode.eulerAngles = SCNVector3(0, Double.pi/2, 0)
         unitPlaneYZNode.position = SCNVector3(0, yOffset, zOffset)
         addChildNode(unitPlaneYZNode)
     }
     
-    private func setupGridLines(rootNode: SCNNode, spacing: CGFloat, direction: SCNVector3, color: UIColor) {
+    private func addGridLines(rootNode: SCNNode, spacing: CGFloat, direction: SCNVector3, color: UIColor) {
         let lineCount = Int(axisHeight/spacing)
         for i in 0..<lineCount {
             let gridLine = SCNCylinder(radius: gridlineRadius, height: axisHeight)
@@ -164,6 +171,26 @@ class PlotNode: SCNNode {
             gridLineNode.position = SCNVector3(position, position, position) * direction
             rootNode.addChildNode(gridLineNode)
         }
+    }
+    
+    private func addWall(plane: PlotPlane, color: UIColor, wallThickness: CGFloat) {
+        let wallGeometry = SCNBox(width: axisHeight, height: axisHeight, length: wallThickness, chamferRadius: 0)
+        wallGeometry.materials.first!.diffuse.contents = color
+        let wallNode = SCNNode(geometry: wallGeometry)
+        
+        let offset = axisHeight/2
+        switch plane {
+        case .xy:
+            wallNode.position = SCNVector3(offset, offset, 0)
+        case .xz:
+            wallNode.eulerAngles = SCNVector3(-Double.pi/2, 0, 0)
+            wallNode.position = SCNVector3(offset, 0, offset)
+        case .yz:
+            wallNode.eulerAngles = SCNVector3(0, Double.pi/2, 0)
+            wallNode.position = SCNVector3(0, offset, offset)
+        }
+        
+        addChildNode(wallNode)
     }
     
     // MARK: - Plotting

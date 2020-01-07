@@ -31,6 +31,16 @@ public struct PlotConfiguration {
     let xzGridColor: UIColor
     let yzGridColor: UIColor
     
+    let xyUnitPlaneColor: UIColor
+    let xzUnitPlaneColor: UIColor
+    let yzUnitPlaneColor: UIColor
+    
+    let xyWallColorPlaneColor: UIColor
+    let xzWallColorPlaneColor: UIColor
+    let yzWallColorPlaneColor: UIColor
+    
+    let wallThickness: CGFloat
+    
     static let defaultConfig = PlotConfiguration(axisRadius: 0.035,
                                                  axisHeight: 7,
                                                  gridlineRadius: 0.009,
@@ -47,5 +57,12 @@ public struct PlotConfiguration {
                                                  zMin: 0,
                                                  xyGridColor: .red,
                                                  xzGridColor: .green,
-                                                 yzGridColor: .yellow)
+                                                 yzGridColor: .yellow,
+                                                 xyUnitPlaneColor: UIColor.red.withAlphaComponent(0.3),
+                                                 xzUnitPlaneColor: UIColor.green.withAlphaComponent(0.3),
+                                                 yzUnitPlaneColor: UIColor.yellow.withAlphaComponent(0.3),
+                                                 xyWallColorPlaneColor: UIColor.red.withAlphaComponent(0.2),
+                                                 xzWallColorPlaneColor: UIColor.green.withAlphaComponent(0.2),
+                                                 yzWallColorPlaneColor: UIColor.yellow.withAlphaComponent(0.2),
+                                                 wallThickness: 0.03)
 }
