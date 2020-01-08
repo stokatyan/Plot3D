@@ -12,12 +12,11 @@ public class PlotView: UIView {
     
     // MARK: - Properties
     
-    var sceneView: SCNView
+    public private(set) var sceneView: SCNView
     let scene: SCNScene
     
-    // Nodes
     let plotNode: PlotNode
-    let cameraNode: SCNNode
+    public let cameraNode: SCNNode
     
     // MARK: - Init
     
@@ -69,7 +68,39 @@ public class PlotView: UIView {
         plotNode.plot(points: points)
     }
     
-    // MARK: - Update Configuration
+    // MARK: - Getters
+    
+    public func getHorizontalGridLines(_ plotPlane: PlotPlane) -> [SCNNode] {
+        switch plotPlane {
+        case .xy:
+            return plotNode.gridLinesHorizontalXY
+        case .xz:
+            return plotNode.gridLinesHorizontalXZ
+        case .yz:
+            return plotNode.gridLinesHorizontalYZ
+        }
+    }
+    
+    public func getVerticalGridLines(_ plotPlane: PlotPlane) -> [SCNNode] {
+        switch plotPlane {
+        case .xy:
+            return plotNode.gridLinesVerticalXY
+        case .xz:
+            return plotNode.gridLinesVerticalXZ
+        case .yz:
+            return plotNode.gridLinesVerticalYZ
+        }
+    }
+    
+    // MARK: - Setters
+    
+    public func setCamera(position: PlotPoint) {
+        cameraNode.position = position.vector
+    }
+    
+    public func setCamera(lookAt position: PlotPoint) {
+        cameraNode.look(at: position.vector)
+    }
     
     public func setUnitPlanes(isHidden: Bool) {
         plotNode.setUnitPlane(PlotPlane.xy, isHidden: isHidden)
@@ -93,30 +124,6 @@ public class PlotView: UIView {
     
     public func setWall(_ plotPlane: PlotPlane, color: UIColor) {
         plotNode.setWall(plotPlane, color: color)
-    }
-    
-    // MARK: - Getters
-    
-    public func getHorizontalGridLines(_ plotPlane: PlotPlane) -> [SCNNode] {
-        switch plotPlane {
-        case .xy:
-            return plotNode.gridLinesHorizontalXY
-        case .xz:
-            return plotNode.gridLinesHorizontalXZ
-        case .yz:
-            return plotNode.gridLinesHorizontalYZ
-        }
-    }
-    
-    public func getVerticalGridLines(_ plotPlane: PlotPlane) -> [SCNNode] {
-        switch plotPlane {
-        case .xy:
-            return plotNode.gridLinesVerticalXY
-        case .xz:
-            return plotNode.gridLinesVerticalXZ
-        case .yz:
-            return plotNode.gridLinesVerticalYZ
-        }
     }
     
 }
