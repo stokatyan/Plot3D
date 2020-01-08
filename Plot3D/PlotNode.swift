@@ -39,9 +39,13 @@ class PlotNode: SCNNode {
     let unitPlaneXYNode: SCNNode
     let unitPlaneXZNode: SCNNode
     let unitPlaneYZNode: SCNNode
-    let xyPlaneNode = SCNNode()
-    let xzPlaneNode = SCNNode()
-    let yzPlaneNode = SCNNode()
+    
+    let wallXY: SCNGeometry
+    let wallXZ: SCNGeometry
+    let wallYZ: SCNGeometry
+    let wallXYNode: SCNNode
+    let wallXZNode: SCNNode
+    let wallYZNode: SCNNode
     
     // Grid
     var gridXY = [SCNGeometry]()
@@ -91,6 +95,13 @@ class PlotNode: SCNNode {
         unitPlaneXZNode = SCNNode(geometry: unitPlaneXZ)
         unitPlaneYZNode = SCNNode(geometry: unitPlaneYZ)
         
+        wallXY = SCNBox(width: axisHeight, height: axisHeight, length: config.wallThickness, chamferRadius: 0)
+        wallXZ = SCNBox(width: axisHeight, height: axisHeight, length: config.wallThickness, chamferRadius: 0)
+        wallYZ = SCNBox(width: axisHeight, height: axisHeight, length: config.wallThickness, chamferRadius: 0)
+        wallXYNode = SCNNode(geometry: wallXY)
+        wallXZNode = SCNNode(geometry: wallXZ)
+        wallYZNode = SCNNode(geometry: wallYZ)
+        
         super.init()
         
         setupAxis(axisHeight: axisHeight)
@@ -106,9 +117,9 @@ class PlotNode: SCNNode {
         addGridLines(rootNode: yPlotNode, spacing: zGridSpacing, direction: PlotAxis.z.direction, color: config.yzGridColor)
         addGridLines(rootNode: zPlotNode, spacing: yGridSpacing, direction: PlotAxis.z.negativeDirection, color: config.yzGridColor)
         
-        addWall(plane: .xy, color: config.xyGridColor.withAlphaComponent(0.25), wallThickness: config.wallThickness)
-        addWall(plane: .xz, color: config.xzGridColor.withAlphaComponent(0.25), wallThickness: config.wallThickness)
-        addWall(plane: .yz, color: config.yzGridColor.withAlphaComponent(0.25), wallThickness: config.wallThickness)
+        addWall(plane: .xy, color: config.xyWallColorPlaneColor)
+        addWall(plane: .xz, color: config.xzWallColorPlaneColor)
+        addWall(plane: .yz, color: config.yzWallColorPlaneColor)
     }
     
     required init?(coder: NSCoder) {
@@ -173,19 +184,21 @@ class PlotNode: SCNNode {
         }
     }
     
-    private func addWall(plane: PlotPlane, color: UIColor, wallThickness: CGFloat) {
-        let wallGeometry = SCNBox(width: axisHeight, height: axisHeight, length: wallThickness, chamferRadius: 0)
-        wallGeometry.materials.first!.diffuse.contents = color
-        let wallNode = SCNNode(geometry: wallGeometry)
+    private func addWall(plane: PlotPlane, color: UIColor) {
+        setWall(plane, color: color)
         
         let offset = axisHeight/2
+        var wallNode: SCNNode
         switch plane {
         case .xy:
+            wallNode = wallXYNode
             wallNode.position = SCNVector3(offset, offset, 0)
         case .xz:
+            wallNode = wallXZNode
             wallNode.eulerAngles = SCNVector3(-Double.pi/2, 0, 0)
             wallNode.position = SCNVector3(offset, 0, offset)
         case .yz:
+            wallNode = wallYZNode
             wallNode.eulerAngles = SCNVector3(0, Double.pi/2, 0)
             wallNode.position = SCNVector3(0, offset, offset)
         }
@@ -225,6 +238,28 @@ class PlotNode: SCNNode {
             unitPlaneXZNode.isHidden = isHidden
         case PlotPlane.yz:
             unitPlaneYZNode.isHidden = isHidden
+        }
+    }
+    
+    func setWall(_ plane: PlotPlane, isHidden: Bool) {
+        switch plane {
+        case PlotPlane.xy:
+            wallXYNode.isHidden = isHidden
+        case PlotPlane.xz:
+            wallXZNode.isHidden = isHidden
+        case PlotPlane.yz:
+            wallYZNode.isHidden = isHidden
+        }
+    }
+    
+    func setWall(_ plane: PlotPlane, color: UIColor) {
+        switch plane {
+        case PlotPlane.xy:
+            wallXY.materials.first!.diffuse.contents = color
+        case PlotPlane.xz:
+            wallXZ.materials.first!.diffuse.contents = color
+        case PlotPlane.yz:
+            wallYZ.materials.first!.diffuse.contents = color
         }
     }
     

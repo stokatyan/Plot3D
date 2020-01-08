@@ -69,7 +69,6 @@ public class PlotView: UIView {
         plotNode.plot(points: points)
     }
     
-    
     // MARK: - Update Configuration
     
     public func setUnitPlanes(isHidden: Bool) {
@@ -80,6 +79,20 @@ public class PlotView: UIView {
     
     public func setUnitPlan(_ plotPlane: PlotPlane, isHidden: Bool) {
         plotNode.setUnitPlane(plotPlane, isHidden: isHidden)
+    }
+    
+    public func setWalls(isHidden: Bool) {
+        plotNode.setWall(PlotPlane.xy, isHidden: isHidden)
+        plotNode.setWall(PlotPlane.xz, isHidden: isHidden)
+        plotNode.setWall(PlotPlane.yz, isHidden: isHidden)
+    }
+    
+    public func setWall(_ plotPlane: PlotPlane, isHidden: Bool) {
+        plotNode.setWall(plotPlane, isHidden: isHidden)
+    }
+    
+    public func setWall(_ plotPlane: PlotPlane, color: UIColor) {
+        plotNode.setWall(plotPlane, color: color)
     }
     
 }

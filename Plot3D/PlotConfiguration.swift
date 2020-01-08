@@ -64,5 +64,5 @@ public struct PlotConfiguration {
                                                  xyWallColorPlaneColor: UIColor.red.withAlphaComponent(0.2),
                                                  xzWallColorPlaneColor: UIColor.green.withAlphaComponent(0.2),
                                                  yzWallColorPlaneColor: UIColor.yellow.withAlphaComponent(0.2),
-                                                 wallThickness: 0.03)
+                                                 wallThickness: 0.01)
 }
