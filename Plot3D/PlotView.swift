@@ -95,4 +95,28 @@ public class PlotView: UIView {
         plotNode.setWall(plotPlane, color: color)
     }
     
+    // MARK: - Getters
+    
+    public func getHorizontalGridLines(_ plotPlane: PlotPlane) -> [SCNNode] {
+        switch plotPlane {
+        case .xy:
+            return plotNode.gridLinesHorizontalXY
+        case .xz:
+            return plotNode.gridLinesHorizontalXZ
+        case .yz:
+            return plotNode.gridLinesHorizontalYZ
+        }
+    }
+    
+    public func getVerticalGridLines(_ plotPlane: PlotPlane) -> [SCNNode] {
+        switch plotPlane {
+        case .xy:
+            return plotNode.gridLinesVerticalXY
+        case .xz:
+            return plotNode.gridLinesVerticalXZ
+        case .yz:
+            return plotNode.gridLinesVerticalYZ
+        }
+    }
+    
 }

@@ -47,8 +47,12 @@ class PlotNode: SCNNode {
     let wallXZNode: SCNNode
     let wallYZNode: SCNNode
     
-    // Grid
-    var gridXY = [SCNGeometry]()
+    public private(set) var gridLinesHorizontalXY = [SCNNode]()
+    public private(set) var gridLinesHorizontalXZ = [SCNNode]()
+    public private(set) var gridLinesHorizontalYZ = [SCNNode]()
+    public private(set) var gridLinesVerticalXY = [SCNNode]()
+    public private(set) var gridLinesVerticalXZ = [SCNNode]()
+    public private(set) var gridLinesVerticalYZ = [SCNNode]()
     
     // MARK: - Init
     
@@ -107,19 +111,19 @@ class PlotNode: SCNNode {
         setupAxis(axisHeight: axisHeight)
         setupUnitPlanes(xGridSpacing: xGridSpacing, yGridSpacing: yGridSpacing, zGridSpacing: zGridSpacing, config: config)
         
-        // xy plane
-        addGridLines(rootNode: xPlotNode, spacing: yGridSpacing, direction: PlotAxis.x.negativeDirection, color: config.xyGridColor)
-        addGridLines(rootNode: yPlotNode, spacing: xGridSpacing, direction: PlotAxis.x.direction, color: config.xyGridColor)
-        // xz plane
-        addGridLines(rootNode: xPlotNode, spacing: zGridSpacing, direction: PlotAxis.z.direction, color: config.xzGridColor)
-        addGridLines(rootNode: zPlotNode, spacing: xGridSpacing, direction: PlotAxis.x.direction, color: config.xzGridColor)
-        // yz plane
-        addGridLines(rootNode: yPlotNode, spacing: zGridSpacing, direction: PlotAxis.z.direction, color: config.yzGridColor)
-        addGridLines(rootNode: zPlotNode, spacing: yGridSpacing, direction: PlotAxis.z.negativeDirection, color: config.yzGridColor)
+        // xy grid lines
+        gridLinesHorizontalXY += addGridLines(rootNode: xPlotNode, spacing: yGridSpacing, direction: PlotAxis.x.negativeDirection, color: config.xyGridColor)
+        gridLinesVerticalXY += addGridLines(rootNode: yPlotNode, spacing: xGridSpacing, direction: PlotAxis.x.direction, color: config.xyGridColor)
+        // xz grid lines
+        gridLinesHorizontalXZ += addGridLines(rootNode: xPlotNode, spacing: zGridSpacing, direction: PlotAxis.z.direction, color: config.xzGridColor)
+        gridLinesVerticalXZ += addGridLines(rootNode: zPlotNode, spacing: xGridSpacing, direction: PlotAxis.x.direction, color: config.xzGridColor)
+        // yz grid lines
+        gridLinesVerticalYZ += addGridLines(rootNode: yPlotNode, spacing: zGridSpacing, direction: PlotAxis.z.direction, color: config.yzGridColor)
+        gridLinesHorizontalYZ += addGridLines(rootNode: zPlotNode, spacing: yGridSpacing, direction: PlotAxis.z.negativeDirection, color: config.yzGridColor)
         
-        addWall(plane: .xy, color: config.xyWallColorPlaneColor)
-        addWall(plane: .xz, color: config.xzWallColorPlaneColor)
-        addWall(plane: .yz, color: config.yzWallColorPlaneColor)
+        addWall(plane: .xy, color: config.xyWallColor)
+        addWall(plane: .xz, color: config.xzWallColor)
+        addWall(plane: .yz, color: config.yzWallColor)
     }
     
     required init?(coder: NSCoder) {
@@ -172,8 +176,9 @@ class PlotNode: SCNNode {
         addChildNode(unitPlaneYZNode)
     }
     
-    private func addGridLines(rootNode: SCNNode, spacing: CGFloat, direction: SCNVector3, color: UIColor) {
+    private func addGridLines(rootNode: SCNNode, spacing: CGFloat, direction: SCNVector3, color: UIColor) -> [SCNNode] {
         let lineCount = Int(axisHeight/spacing)
+        var gridLines = [SCNNode]()
         for i in 0..<lineCount {
             let gridLine = SCNCylinder(radius: gridlineRadius, height: axisHeight)
             gridLine.materials.first!.diffuse.contents = color
@@ -181,7 +186,10 @@ class PlotNode: SCNNode {
             let position = spacing * CGFloat(i + 1)
             gridLineNode.position = SCNVector3(position, position, position) * direction
             rootNode.addChildNode(gridLineNode)
+            gridLines.append(gridLineNode)
         }
+        
+        return gridLines
     }
     
     private func addWall(plane: PlotPlane, color: UIColor) {

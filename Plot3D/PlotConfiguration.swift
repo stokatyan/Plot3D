@@ -35,9 +35,9 @@ public struct PlotConfiguration {
     let xzUnitPlaneColor: UIColor
     let yzUnitPlaneColor: UIColor
     
-    let xyWallColorPlaneColor: UIColor
-    let xzWallColorPlaneColor: UIColor
-    let yzWallColorPlaneColor: UIColor
+    let xyWallColor: UIColor
+    let xzWallColor: UIColor
+    let yzWallColor: UIColor
     
     let wallThickness: CGFloat
     
@@ -61,8 +61,8 @@ public struct PlotConfiguration {
                                                  xyUnitPlaneColor: UIColor.red.withAlphaComponent(0.3),
                                                  xzUnitPlaneColor: UIColor.green.withAlphaComponent(0.3),
                                                  yzUnitPlaneColor: UIColor.yellow.withAlphaComponent(0.3),
-                                                 xyWallColorPlaneColor: UIColor.red.withAlphaComponent(0.2),
-                                                 xzWallColorPlaneColor: UIColor.green.withAlphaComponent(0.2),
-                                                 yzWallColorPlaneColor: UIColor.yellow.withAlphaComponent(0.2),
+                                                 xyWallColor: UIColor.red.withAlphaComponent(0.2),
+                                                 xzWallColor: UIColor.green.withAlphaComponent(0.2),
+                                                 yzWallColor: UIColor.yellow.withAlphaComponent(0.2),
                                                  wallThickness: 0.01)
 }
