@@ -12,12 +12,11 @@ public class PlotView: UIView {
     
     // MARK: - Properties
     
-    var sceneView: SCNView
+    public private(set) var sceneView: SCNView
     let scene: SCNScene
     
-    // Nodes
-    let axisNode: AxisNode
-    let cameraNode: SCNNode
+    let plotNode: PlotNode
+    public let cameraNode: SCNNode
     
     // MARK: - Init
     
@@ -25,7 +24,7 @@ public class PlotView: UIView {
         sceneView = SCNView(frame: CGRect(x: 0, y: 0, width: frame.width, height: frame.height))
         scene = SCNScene()
         cameraNode = SCNNode()
-        axisNode = AxisNode(config: AxisConfiguration.defaultConfig)
+        plotNode = PlotNode(config: PlotConfiguration.defaultConfig)
         
         super.init(frame: frame)
         addSubview(sceneView)
@@ -54,13 +53,77 @@ public class PlotView: UIView {
         sceneView.autoenablesDefaultLighting = true
         sceneView.allowsCameraControl = true
         
-        scene.rootNode.addChildNode(axisNode)
+        scene.rootNode.addChildNode(plotNode)
     }
     
     // MARK: - Plotting
     
     public func plot(points: [PlotPoint]) {
-        axisNode.plot(points: points)
+        plotNode.plot(points: points.map({ point -> SCNVector3 in
+            return point.vector
+        }))
     }
-
+    
+    public func plot(points: [SCNVector3]) {
+        plotNode.plot(points: points)
+    }
+    
+    // MARK: - Getters
+    
+    public func getHorizontalGridLines(_ plotPlane: PlotPlane) -> [SCNNode] {
+        switch plotPlane {
+        case .xy:
+            return plotNode.gridLinesHorizontalXY
+        case .xz:
+            return plotNode.gridLinesHorizontalXZ
+        case .yz:
+            return plotNode.gridLinesHorizontalYZ
+        }
+    }
+    
+    public func getVerticalGridLines(_ plotPlane: PlotPlane) -> [SCNNode] {
+        switch plotPlane {
+        case .xy:
+            return plotNode.gridLinesVerticalXY
+        case .xz:
+            return plotNode.gridLinesVerticalXZ
+        case .yz:
+            return plotNode.gridLinesVerticalYZ
+        }
+    }
+    
+    // MARK: - Setters
+    
+    public func setCamera(position: PlotPoint) {
+        cameraNode.position = position.vector
+    }
+    
+    public func setCamera(lookAt position: PlotPoint) {
+        cameraNode.look(at: position.vector)
+    }
+    
+    public func setUnitPlanes(isHidden: Bool) {
+        plotNode.setUnitPlane(PlotPlane.xy, isHidden: isHidden)
+        plotNode.setUnitPlane(PlotPlane.xz, isHidden: isHidden)
+        plotNode.setUnitPlane(PlotPlane.yz, isHidden: isHidden)
+    }
+    
+    public func setUnitPlan(_ plotPlane: PlotPlane, isHidden: Bool) {
+        plotNode.setUnitPlane(plotPlane, isHidden: isHidden)
+    }
+    
+    public func setWalls(isHidden: Bool) {
+        plotNode.setWall(PlotPlane.xy, isHidden: isHidden)
+        plotNode.setWall(PlotPlane.xz, isHidden: isHidden)
+        plotNode.setWall(PlotPlane.yz, isHidden: isHidden)
+    }
+    
+    public func setWall(_ plotPlane: PlotPlane, isHidden: Bool) {
+        plotNode.setWall(plotPlane, isHidden: isHidden)
+    }
+    
+    public func setWall(_ plotPlane: PlotPlane, color: UIColor) {
+        plotNode.setWall(plotPlane, color: color)
+    }
+    
 }
