@@ -13,6 +13,8 @@
 		E19D4B1B23C102D9000AACBE /* PlotConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19D4B1A23C102D9000AACBE /* PlotConfiguration.swift */; };
 		E19D4B1D23C10754000AACBE /* PlotAxis.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19D4B1C23C10754000AACBE /* PlotAxis.swift */; };
 		E19FEE0123AC0AF800C0E68C /* PlotNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FEE0023AC0AF800C0E68C /* PlotNode.swift */; };
+		E1D2863223C593170070797A /* PlotDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D2863123C593170070797A /* PlotDataSource.swift */; };
+		E1D2863423C593240070797A /* PlotDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D2863323C593240070797A /* PlotDelegate.swift */; };
 		E1F9FF7023AB0727003EFA9F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F9FF6F23AB0727003EFA9F /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
@@ -25,6 +27,8 @@
 		E19D4B1A23C102D9000AACBE /* PlotConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlotConfiguration.swift; sourceTree = "<group>"; };
 		E19D4B1C23C10754000AACBE /* PlotAxis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlotAxis.swift; sourceTree = "<group>"; };
 		E19FEE0023AC0AF800C0E68C /* PlotNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlotNode.swift; sourceTree = "<group>"; };
+		E1D2863123C593170070797A /* PlotDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlotDataSource.swift; sourceTree = "<group>"; };
+		E1D2863323C593240070797A /* PlotDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlotDelegate.swift; sourceTree = "<group>"; };
 		E1F9FF6F23AB0727003EFA9F /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -61,6 +65,8 @@
 				E104F87623A5B8AF0073D977 /* Plot3D.h */,
 				E19D4B1C23C10754000AACBE /* PlotAxis.swift */,
 				E19D4B1A23C102D9000AACBE /* PlotConfiguration.swift */,
+				E1D2863123C593170070797A /* PlotDataSource.swift */,
+				E1D2863323C593240070797A /* PlotDelegate.swift */,
 				E19FEE0023AC0AF800C0E68C /* PlotNode.swift */,
 				E15D30D123C04B520049EBF0 /* PlotPoint.swift */,
 				E104F8A423A6B7C10073D977 /* PlotView.swift */,
@@ -151,10 +157,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				E104F8A523A6B7C10073D977 /* PlotView.swift in Sources */,
+				E1D2863423C593240070797A /* PlotDelegate.swift in Sources */,
 				E19D4B1B23C102D9000AACBE /* PlotConfiguration.swift in Sources */,
 				E19FEE0123AC0AF800C0E68C /* PlotNode.swift in Sources */,
 				E19D4B1D23C10754000AACBE /* PlotAxis.swift in Sources */,
 				E1F9FF7023AB0727003EFA9F /* Extensions.swift in Sources */,
+				E1D2863223C593170070797A /* PlotDataSource.swift in Sources */,
 				E15D30D223C04B520049EBF0 /* PlotPoint.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

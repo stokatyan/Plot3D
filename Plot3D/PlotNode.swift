@@ -8,7 +8,7 @@
 
 import SceneKit
 
-class PlotNode: SCNNode {
+public class PlotNode: SCNNode {
     
     // MARK: - Properties
     
@@ -53,6 +53,9 @@ class PlotNode: SCNNode {
     public private(set) var gridLinesVerticalXY = [SCNNode]()
     public private(set) var gridLinesVerticalXZ = [SCNNode]()
     public private(set) var gridLinesVerticalYZ = [SCNNode]()
+    
+    var dataSource: PlotDataSource?
+    var delegate: PlotDelegate?
     
     // MARK: - Init
     
@@ -224,16 +227,30 @@ class PlotNode: SCNNode {
         return PlotNode.coordinate(forValue: value, axisMaxValue: axisMaxValue, axisMinValue: axisMinValue, axisHeight: self.axisHeight)
     }
     
-    func plot(points: [SCNVector3]) {
-        for point in points {
-            let plotShape = SCNSphere(radius: 0.1)
-            let pointNode = SCNNode(geometry: plotShape)
-            let x = coordinate(forValue: CGFloat(point.x), axisMaxValue: 10, axisMinValue: 0)
-            let y = coordinate(forValue: CGFloat(point.y), axisMaxValue: 10, axisMinValue: 0)
-            let z = coordinate(forValue: CGFloat(point.z), axisMaxValue: 10, axisMinValue: 0)
-            pointNode.position = SCNVector3(x, y, z)
-            addChildNode(pointNode)
+    func refresh() {
+        guard let dataSource = dataSource, let delegate = delegate else {
+            return
         }
+        
+        let numberOfPoints = dataSource.numberOfPoints()
+        guard numberOfPoints >= 0 else {
+            return
+        }
+        
+        for index in 0..<numberOfPoints {
+            let plotPoint = delegate.plot(self, pointForItemAt: index)
+            let geometry = delegate.plot(self, geometryForItemAt: index)
+            plot(plotPoint, geometry: geometry)
+        }
+    }
+    
+    private func plot(_ point: PlotPoint, geometry: SCNGeometry?) {
+        let pointNode = SCNNode(geometry: geometry)
+        let x = coordinate(forValue: point.x, axisMaxValue: axisHeight, axisMinValue: 0)
+        let y = coordinate(forValue: point.y, axisMaxValue: axisHeight, axisMinValue: 0)
+        let z = coordinate(forValue: point.z, axisMaxValue: axisHeight, axisMinValue: 0)
+        pointNode.position = SCNVector3(x, y, z)
+        addChildNode(pointNode)
     }
     
     // MARK: Update Configuration

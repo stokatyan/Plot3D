@@ -15,8 +15,26 @@ public class PlotView: UIView {
     public private(set) var sceneView: SCNView
     let scene: SCNScene
     
-    let plotNode: PlotNode
+    private let plotNode: PlotNode
     public let cameraNode: SCNNode
+    
+    public var dataSource: PlotDataSource? {
+        get {
+            return plotNode.dataSource
+        }
+        set(newValue) {
+            plotNode.dataSource = newValue
+        }
+    }
+    
+    public var delegate: PlotDelegate? {
+        get {
+            return plotNode.delegate
+        }
+        set(newValue) {
+            plotNode.delegate = newValue
+        }
+    }
     
     // MARK: - Init
     
@@ -58,14 +76,8 @@ public class PlotView: UIView {
     
     // MARK: - Plotting
     
-    public func plot(points: [PlotPoint]) {
-        plotNode.plot(points: points.map({ point -> SCNVector3 in
-            return point.vector
-        }))
-    }
-    
-    public func plot(points: [SCNVector3]) {
-        plotNode.plot(points: points)
+    public func refresh() {
+        plotNode.refresh()
     }
     
     // MARK: - Getters
