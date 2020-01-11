@@ -76,10 +76,18 @@ public class PlotView: UIView {
     
     // MARK: - Plotting
     
+    public func plotNewPoints() {
+        plotNode.plotNewPoints()
+    }
+    
+    public func plottedPoint(atIndex index: Int) -> SCNNode? {
+        return plotNode.plottedPoint(atIndex: index)
+    }
+    
     public func refresh() {
         plotNode.refresh()
     }
-    
+        
     // MARK: - Getters
     
     public func getHorizontalGridLines(_ plotPlane: PlotPlane) -> [SCNNode] {

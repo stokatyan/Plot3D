@@ -54,6 +54,16 @@ public class PlotNode: SCNNode {
     public private(set) var gridLinesVerticalXZ = [SCNNode]()
     public private(set) var gridLinesVerticalYZ = [SCNNode]()
     
+    private var xMax: CGFloat
+    private var yMax: CGFloat
+    private var zMax: CGFloat
+    private var xMin: CGFloat
+    private var yMin: CGFloat
+    private var zMin: CGFloat
+    
+    // Plotting
+    private var plotPointRootNode: SCNNode
+    private var plottedPoints = [SCNNode]()
     var dataSource: PlotDataSource?
     var delegate: PlotDelegate?
     
@@ -109,6 +119,15 @@ public class PlotNode: SCNNode {
         wallXZNode = SCNNode(geometry: wallXZ)
         wallYZNode = SCNNode(geometry: wallYZ)
         
+        plotPointRootNode = SCNNode()
+        
+        xMax = config.xMax
+        yMax = config.yMax
+        zMax = config.zMax
+        xMin = config.xMin
+        yMin = config.yMin
+        zMin = config.zMin
+        
         super.init()
         
         setupAxis(axisHeight: axisHeight)
@@ -127,6 +146,8 @@ public class PlotNode: SCNNode {
         addWall(plane: .xy, color: config.xyWallColor)
         addWall(plane: .xz, color: config.xzWallColor)
         addWall(plane: .yz, color: config.yzWallColor)
+        
+        addChildNode(plotPointRootNode)
     }
     
     required init?(coder: NSCoder) {
@@ -227,13 +248,55 @@ public class PlotNode: SCNNode {
         return PlotNode.coordinate(forValue: value, axisMaxValue: axisMaxValue, axisMinValue: axisMinValue, axisHeight: self.axisHeight)
     }
     
+    private func plot(_ point: PlotPoint, geometry: SCNGeometry?) {
+        let pointNode = SCNNode(geometry: geometry)
+        let x = coordinate(forValue: point.x, axisMaxValue: xMax, axisMinValue: xMin)
+        let y = coordinate(forValue: point.y, axisMaxValue: yMax, axisMinValue: yMin)
+        let z = coordinate(forValue: point.z, axisMaxValue: zMax, axisMinValue: zMin)
+        pointNode.position = SCNVector3(x, y, z)
+        plottedPoints.append(pointNode)
+        plotPointRootNode.addChildNode(pointNode)
+    }
+    
+    func plottedPoint(atIndex index: Int) -> SCNNode? {
+        guard index < plottedPoints.count else {
+            return nil
+        }
+        
+        return plottedPoints[index]
+    }
+    
+    // MARK: - Update Plot
+    
+    func plotNewPoints() {
+        guard let dataSource = dataSource, let delegate = delegate else {
+            return
+        }
+        
+        let currentPointCount = plottedPoints.count
+        let additionalPointCount = dataSource.numberOfPoints() - currentPointCount
+        
+        guard additionalPointCount > 0 else {
+            return
+        }
+        
+        let startIndex = currentPointCount
+        for index in 0..<additionalPointCount {
+            let plotPoint = delegate.plot(self, pointForItemAt: index + startIndex)
+            let geometry = delegate.plot(self, geometryForItemAt: index + startIndex)
+            plot(plotPoint, geometry: geometry)
+        }
+    }
+    
     func refresh() {
+        removeAllPlottedPoints()
+        
         guard let dataSource = dataSource, let delegate = delegate else {
             return
         }
         
         let numberOfPoints = dataSource.numberOfPoints()
-        guard numberOfPoints >= 0 else {
+        guard numberOfPoints > 0 else {
             return
         }
         
@@ -244,13 +307,11 @@ public class PlotNode: SCNNode {
         }
     }
     
-    private func plot(_ point: PlotPoint, geometry: SCNGeometry?) {
-        let pointNode = SCNNode(geometry: geometry)
-        let x = coordinate(forValue: point.x, axisMaxValue: axisHeight, axisMinValue: 0)
-        let y = coordinate(forValue: point.y, axisMaxValue: axisHeight, axisMinValue: 0)
-        let z = coordinate(forValue: point.z, axisMaxValue: axisHeight, axisMinValue: 0)
-        pointNode.position = SCNVector3(x, y, z)
-        addChildNode(pointNode)
+    private func removeAllPlottedPoints() {
+        plottedPoints.removeAll()
+        plotPointRootNode.removeFromParentNode()
+        plotPointRootNode = SCNNode()
+        addChildNode(plotPointRootNode)
     }
     
     // MARK: Update Configuration
