@@ -15,8 +15,26 @@ public class PlotView: UIView {
     public private(set) var sceneView: SCNView
     let scene: SCNScene
     
-    let plotNode: PlotNode
+    private let plotSpace: PlotSpaceNode
     public let cameraNode: SCNNode
+    
+    public var dataSource: PlotDataSource? {
+        get {
+            return plotSpace.dataSource
+        }
+        set(newValue) {
+            plotSpace.dataSource = newValue
+        }
+    }
+    
+    public var delegate: PlotDelegate? {
+        get {
+            return plotSpace.delegate
+        }
+        set(newValue) {
+            plotSpace.delegate = newValue
+        }
+    }
     
     // MARK: - Init
     
@@ -24,13 +42,17 @@ public class PlotView: UIView {
         sceneView = SCNView(frame: CGRect(x: 0, y: 0, width: frame.width, height: frame.height))
         scene = SCNScene()
         cameraNode = SCNNode()
-        plotNode = PlotNode(config: PlotConfiguration.defaultConfig)
+        plotSpace = PlotSpaceNode(config: PlotConfiguration.defaultConfig)
         
         super.init(frame: frame)
+        plotSpace.plotView = self
         addSubview(sceneView)
         
         setupScene()
         setupCamera()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
+        sceneView.addGestureRecognizer(tapGesture)
     }
     
     required init?(coder: NSCoder) {
@@ -53,42 +75,60 @@ public class PlotView: UIView {
         sceneView.autoenablesDefaultLighting = true
         sceneView.allowsCameraControl = true
         
-        scene.rootNode.addChildNode(plotNode)
+        scene.rootNode.addChildNode(plotSpace)
+    }
+    
+    // MARK: - Actions
+    
+    @objc func handleTap(sender: UITapGestureRecognizer) {
+        guard let delegate = delegate else {
+            return
+        }
+        
+        if sender.state == .ended {
+            let location: CGPoint = sender.location(in: sceneView)
+            let hits = self.sceneView.hitTest(location, options: nil)
+            if let node = hits.first?.node as? PlotPointNode {
+                delegate.plot(self, didSelectNode: node, atIndex: node.index)
+            }
+        }
     }
     
     // MARK: - Plotting
     
-    public func plot(points: [PlotPoint]) {
-        plotNode.plot(points: points.map({ point -> SCNVector3 in
-            return point.vector
-        }))
+    public func plotNewPoints() {
+        plotSpace.plotNewPoints()
     }
     
-    public func plot(points: [SCNVector3]) {
-        plotNode.plot(points: points)
+    public func plottedPoint(atIndex index: Int) -> SCNNode? {
+        return plotSpace.plottedPoint(atIndex: index)
     }
     
+    public func refresh() {
+        plotSpace.refresh()
+    }
+        
     // MARK: - Getters
     
     public func getHorizontalGridLines(_ plotPlane: PlotPlane) -> [SCNNode] {
         switch plotPlane {
         case .xy:
-            return plotNode.gridLinesHorizontalXY
+            return plotSpace.gridLinesHorizontalXY
         case .xz:
-            return plotNode.gridLinesHorizontalXZ
+            return plotSpace.gridLinesHorizontalXZ
         case .yz:
-            return plotNode.gridLinesHorizontalYZ
+            return plotSpace.gridLinesHorizontalYZ
         }
     }
     
     public func getVerticalGridLines(_ plotPlane: PlotPlane) -> [SCNNode] {
         switch plotPlane {
         case .xy:
-            return plotNode.gridLinesVerticalXY
+            return plotSpace.gridLinesVerticalXY
         case .xz:
-            return plotNode.gridLinesVerticalXZ
+            return plotSpace.gridLinesVerticalXZ
         case .yz:
-            return plotNode.gridLinesVerticalYZ
+            return plotSpace.gridLinesVerticalYZ
         }
     }
     
@@ -103,27 +143,27 @@ public class PlotView: UIView {
     }
     
     public func setUnitPlanes(isHidden: Bool) {
-        plotNode.setUnitPlane(PlotPlane.xy, isHidden: isHidden)
-        plotNode.setUnitPlane(PlotPlane.xz, isHidden: isHidden)
-        plotNode.setUnitPlane(PlotPlane.yz, isHidden: isHidden)
+        plotSpace.setUnitPlane(PlotPlane.xy, isHidden: isHidden)
+        plotSpace.setUnitPlane(PlotPlane.xz, isHidden: isHidden)
+        plotSpace.setUnitPlane(PlotPlane.yz, isHidden: isHidden)
     }
     
     public func setUnitPlan(_ plotPlane: PlotPlane, isHidden: Bool) {
-        plotNode.setUnitPlane(plotPlane, isHidden: isHidden)
+        plotSpace.setUnitPlane(plotPlane, isHidden: isHidden)
     }
     
     public func setWalls(isHidden: Bool) {
-        plotNode.setWall(PlotPlane.xy, isHidden: isHidden)
-        plotNode.setWall(PlotPlane.xz, isHidden: isHidden)
-        plotNode.setWall(PlotPlane.yz, isHidden: isHidden)
+        plotSpace.setWall(PlotPlane.xy, isHidden: isHidden)
+        plotSpace.setWall(PlotPlane.xz, isHidden: isHidden)
+        plotSpace.setWall(PlotPlane.yz, isHidden: isHidden)
     }
     
     public func setWall(_ plotPlane: PlotPlane, isHidden: Bool) {
-        plotNode.setWall(plotPlane, isHidden: isHidden)
+        plotSpace.setWall(plotPlane, isHidden: isHidden)
     }
     
     public func setWall(_ plotPlane: PlotPlane, color: UIColor) {
-        plotNode.setWall(plotPlane, color: color)
+        plotSpace.setWall(plotPlane, color: color)
     }
     
 }
