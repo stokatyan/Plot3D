@@ -8,6 +8,6 @@
 
 import Foundation
 
-public protocol PlotDataSource {
+public protocol PlotDataSource: class {
     func numberOfPoints() -> Int
 }

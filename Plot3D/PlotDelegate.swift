@@ -8,14 +8,14 @@
 
 import SceneKit
 
-public protocol PlotDelegate {
-    func plot(_ plotSpace: PlotSpaceNode, pointForItemAt index: Int) -> PlotPoint
-    func plot(_ plotSpace: PlotSpaceNode, geometryForItemAt index: Int) -> SCNGeometry?
-    func plot(_ plotSpace: PlotSpaceNode, didSelectItemAt index: Int)
+public protocol PlotDelegate: class {
+    func plot(_ plotView: PlotView, pointForItemAt index: Int) -> PlotPoint
+    func plot(_ plotView: PlotView, geometryForItemAt index: Int) -> SCNGeometry?
+    func plot(_ plotView: PlotView, didSelectNode node: PlotPointNode, atIndex index: Int)
 }
 
 // MARK: - Default Implementations
 
 public extension PlotDelegate {
-    func plot(_ plotSpace: PlotSpaceNode, didSelectItemAt index: Int) {}
+    func plot(_ plotView: PlotView, didSelectNode node: PlotPointNode, atIndex index: Int) {}
 }

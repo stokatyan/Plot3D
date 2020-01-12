@@ -64,8 +64,9 @@ public class PlotSpaceNode: SCNNode {
     // Plotting
     private var plotPointRootNode: SCNNode
     private var plottedPoints = [SCNNode]()
-    var dataSource: PlotDataSource?
-    var delegate: PlotDelegate?
+    weak var dataSource: PlotDataSource?
+    weak var delegate: PlotDelegate?
+    weak var plotView: PlotView?
     
     // MARK: - Init
     
@@ -249,11 +250,12 @@ public class PlotSpaceNode: SCNNode {
     }
     
     private func plot(_ point: PlotPoint, geometry: SCNGeometry?) {
-        let pointNode = SCNNode(geometry: geometry)
+        let pointNode = PlotPointNode(geometry: geometry, index: plottedPoints.count)
         let x = coordinate(forValue: point.x, axisMaxValue: xMax, axisMinValue: xMin)
         let y = coordinate(forValue: point.y, axisMaxValue: yMax, axisMinValue: yMin)
         let z = coordinate(forValue: point.z, axisMaxValue: zMax, axisMinValue: zMin)
         pointNode.position = SCNVector3(x, y, z)
+        
         plottedPoints.append(pointNode)
         plotPointRootNode.addChildNode(pointNode)
     }
@@ -269,7 +271,7 @@ public class PlotSpaceNode: SCNNode {
     // MARK: - Update Plot
     
     func plotNewPoints() {
-        guard let dataSource = dataSource, let delegate = delegate else {
+        guard let dataSource = dataSource, let delegate = delegate, let plotView = plotView else {
             return
         }
         
@@ -282,8 +284,8 @@ public class PlotSpaceNode: SCNNode {
         
         let startIndex = currentPointCount
         for index in 0..<additionalPointCount {
-            let plotPoint = delegate.plot(self, pointForItemAt: index + startIndex)
-            let geometry = delegate.plot(self, geometryForItemAt: index + startIndex)
+            let plotPoint = delegate.plot(plotView, pointForItemAt: index + startIndex)
+            let geometry = delegate.plot(plotView, geometryForItemAt: index + startIndex)
             plot(plotPoint, geometry: geometry)
         }
     }
@@ -291,7 +293,7 @@ public class PlotSpaceNode: SCNNode {
     func refresh() {
         removeAllPlottedPoints()
         
-        guard let dataSource = dataSource, let delegate = delegate else {
+        guard let dataSource = dataSource, let delegate = delegate, let plotView = plotView else {
             return
         }
         
@@ -301,8 +303,8 @@ public class PlotSpaceNode: SCNNode {
         }
         
         for index in 0..<numberOfPoints {
-            let plotPoint = delegate.plot(self, pointForItemAt: index)
-            let geometry = delegate.plot(self, geometryForItemAt: index)
+            let plotPoint = delegate.plot(plotView, pointForItemAt: index)
+            let geometry = delegate.plot(plotView, geometryForItemAt: index)
             plot(plotPoint, geometry: geometry)
         }
     }

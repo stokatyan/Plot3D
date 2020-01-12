@@ -45,14 +45,14 @@ public class PlotView: UIView {
         plotSpace = PlotSpaceNode(config: PlotConfiguration.defaultConfig)
         
         super.init(frame: frame)
+        plotSpace.plotView = self
         addSubview(sceneView)
         
         setupScene()
         setupCamera()
         
-//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
-        //Add recognizer to sceneview
-//        sceneView.addGestureRecognizer(tapGesture)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
+        sceneView.addGestureRecognizer(tapGesture)
     }
     
     required init?(coder: NSCoder) {
@@ -80,7 +80,7 @@ public class PlotView: UIView {
     
     // MARK: - Actions
     
-    func handleTap(sender: UITapGestureRecognizer) {
+    @objc func handleTap(sender: UITapGestureRecognizer) {
         guard let delegate = delegate else {
             return
         }
@@ -88,8 +88,8 @@ public class PlotView: UIView {
         if sender.state == .ended {
             let location: CGPoint = sender.location(in: sceneView)
             let hits = self.sceneView.hitTest(location, options: nil)
-            if let tappedNode = hits.first?.node {
-//                delegate.plot(plotSpace, didSelectItemAt: tappedNode.)
+            if let node = hits.first?.node as? PlotPointNode {
+                delegate.plot(self, didSelectNode: node, atIndex: node.index)
             }
         }
     }
