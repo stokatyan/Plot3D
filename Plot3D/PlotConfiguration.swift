@@ -8,38 +8,65 @@
 
 import UIKit
 
+/**
+ The properties required for configuring a 3D plot space.
+ */
 public struct PlotConfiguration {
     
+    /// The radius of the each axis line.
     let axisRadius: CGFloat
+    /// The height of each axis line.
     let axisHeight: CGFloat
+    /// The radius of each grid line.
     let gridlineRadius: CGFloat
+    /// The bottom radius of the cone that is used to represent an arrow at the end of each axis line.
     let arrowBottomRadius: CGFloat
+    /// The height of the cone that is used to represent an arrow at the end of each axis line.
     let arrowHeight: CGFloat
     
+    /// The interval of graphed units between each gridline on the x-axis.
     let xTickInterval: CGFloat
+    /// The interval of graphed units between each gridline on the y-axis.
     let yTickInterval: CGFloat
+    /// The interval of graphed units between each gridline on the z-axis.
     let zTickInterval: CGFloat
-        
+
+    /// The max value along the x-axis.
     let xMax: CGFloat
+    /// The max value along the y-axis.
     let yMax: CGFloat
+    /// The max value along the z-axis.
     let zMax: CGFloat
+    /// The min value along the x-axis.
     let xMin: CGFloat
+    /// The min value along the y-axis.
     let yMin: CGFloat
+    /// The min value along the z-axis.
     let zMin: CGFloat
     
+    /// The color of the grid lines on the xy plane.
     let xyGridColor: UIColor
+    /// The color of the grid lines on the xz plane.
     let xzGridColor: UIColor
+    /// The color of the grid lines on the yz plane.
     let yzGridColor: UIColor
     
+    /// The color of the unit sized plane adjacent to the origin on the xy plane.
     let xyUnitPlaneColor: UIColor
+    /// The color of the unit sized plane adjacent to the origin on the xz plane.
     let xzUnitPlaneColor: UIColor
+    /// The color of the unit sized plane adjacent to the origin on the yz plane.
     let yzUnitPlaneColor: UIColor
     
-    let xyWallColor: UIColor
-    let xzWallColor: UIColor
-    let yzWallColor: UIColor
+    /// The color of the xy plane.
+    let xyPlaneColor: UIColor
+    /// The color of the xz plane.
+    let xzPlaneColor: UIColor
+    /// The color of the yz plane.
+    let yzPlaneColor: UIColor
     
-    let wallThickness: CGFloat
+    /// The thickness of each plane.
+    let planeThickness: CGFloat
     
     static let defaultConfig = PlotConfiguration(axisRadius: 0.035,
                                                  axisHeight: 7,
@@ -61,8 +88,8 @@ public struct PlotConfiguration {
                                                  xyUnitPlaneColor: UIColor.red.withAlphaComponent(0.3),
                                                  xzUnitPlaneColor: UIColor.green.withAlphaComponent(0.3),
                                                  yzUnitPlaneColor: UIColor.yellow.withAlphaComponent(0.3),
-                                                 xyWallColor: UIColor.red.withAlphaComponent(0.2),
-                                                 xzWallColor: UIColor.green.withAlphaComponent(0.2),
-                                                 yzWallColor: UIColor.yellow.withAlphaComponent(0.2),
-                                                 wallThickness: 0.01)
+                                                 xyPlaneColor: UIColor.red.withAlphaComponent(0.2),
+                                                 xzPlaneColor: UIColor.green.withAlphaComponent(0.2),
+                                                 yzPlaneColor: UIColor.yellow.withAlphaComponent(0.2),
+                                                 planeThickness: 0.01)
 }

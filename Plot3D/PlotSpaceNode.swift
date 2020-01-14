@@ -113,9 +113,9 @@ public class PlotSpaceNode: SCNNode {
         unitPlaneXZNode = SCNNode(geometry: unitPlaneXZ)
         unitPlaneYZNode = SCNNode(geometry: unitPlaneYZ)
         
-        wallXY = SCNBox(width: axisHeight, height: axisHeight, length: config.wallThickness, chamferRadius: 0)
-        wallXZ = SCNBox(width: axisHeight, height: axisHeight, length: config.wallThickness, chamferRadius: 0)
-        wallYZ = SCNBox(width: axisHeight, height: axisHeight, length: config.wallThickness, chamferRadius: 0)
+        wallXY = SCNBox(width: axisHeight, height: axisHeight, length: config.planeThickness, chamferRadius: 0)
+        wallXZ = SCNBox(width: axisHeight, height: axisHeight, length: config.planeThickness, chamferRadius: 0)
+        wallYZ = SCNBox(width: axisHeight, height: axisHeight, length: config.planeThickness, chamferRadius: 0)
         wallXYNode = SCNNode(geometry: wallXY)
         wallXZNode = SCNNode(geometry: wallXZ)
         wallYZNode = SCNNode(geometry: wallYZ)
@@ -144,9 +144,9 @@ public class PlotSpaceNode: SCNNode {
         gridLinesVerticalYZ += addGridLines(rootNode: yPlotSpaceNode, spacing: zGridSpacing, direction: PlotAxis.z.direction, color: config.yzGridColor)
         gridLinesHorizontalYZ += addGridLines(rootNode: zPlotSpaceNode, spacing: yGridSpacing, direction: PlotAxis.z.negativeDirection, color: config.yzGridColor)
         
-        addWall(plane: .xy, color: config.xyWallColor)
-        addWall(plane: .xz, color: config.xzWallColor)
-        addWall(plane: .yz, color: config.yzWallColor)
+        addWall(plane: .xy, color: config.xyPlaneColor)
+        addWall(plane: .xz, color: config.xzPlaneColor)
+        addWall(plane: .yz, color: config.yzPlaneColor)
         
         addChildNode(plotPointRootNode)
     }
