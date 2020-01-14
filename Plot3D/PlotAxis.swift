@@ -8,11 +8,15 @@
 
 import SceneKit
 
+/**
+ The enumaration for each axis in the 3D plot space.
+ */
 public enum PlotAxis {
     case x
     case y
     case z
     
+    /// An `SCNVector3` representing the direction of the axis in the 3D plot space.
     internal var direction: SCNVector3 {
         var d: SCNVector3
         switch self {
@@ -26,6 +30,7 @@ public enum PlotAxis {
         return d
     }
     
+    /// An `SCNVector3` representing the negative direction of the axis in the 3D plot space.
     internal var negativeDirection: SCNVector3 {
         var d: SCNVector3
         switch self {
@@ -40,6 +45,9 @@ public enum PlotAxis {
     }
 }
 
+/**
+The enumaration for each plane in the 3D plot space.
+*/
 public enum PlotPlane {
     case xy
     case xz
