@@ -8,68 +8,119 @@
 
 import SceneKit
 
+/**
+ The node that is the parent for all of the points being plotted and visual planes, graphs, and axis.
+ */
 public class PlotSpaceNode: SCNNode {
     
     // MARK: - Properties
     
     // Axis
+    /// The height of the cylinder for each axis.
     let axisHeight: CGFloat
+    /// The radius of the cylinder for each axis.
     let axisRadius: CGFloat
+    /// The radius of the cyclinder for each gridline.
     let gridlineRadius: CGFloat
+    /// The geometry of the x axis.
     let xAxis: SCNGeometry
+    /// The geometry of the y axis.
     let yAxis: SCNGeometry
+    /// The geometry of the z axis.
     let zAxis: SCNGeometry
-    let xPlotSpaceNode: SCNNode
-    let yPlotSpaceNode: SCNNode
-    let zPlotSpaceNode: SCNNode
+    /// The node for the x axis.
+    let xAxisNode: SCNNode
+    /// The node for the y axis.
+    let yAxisNode: SCNNode
+    /// The node for the z axis.
+    let zAxisNode: SCNNode
+    /// The geometry of the origin node.
     let originGeometry: SCNGeometry
     
     // Axis Arrows
+    /// The geometry of the arrow on the x axis.
     let xAxisArrow: SCNGeometry
+    /// The geometry of the arrow on the y axis.
     let yAxisArrow: SCNGeometry
+    /// The geometry of the arrow on the z axis.
     let zAxisArrow: SCNGeometry
+    /// The node for the arrow on the x axis.
     let xArrowNode: SCNNode
+    /// The node for the arrow on the y axis.
     let yArrowNode: SCNNode
+    /// The node for the arrow on the z axis.
     let zArrowNode: SCNNode
     
     // Planes
+    /// The plane that is one unit in size to show the xy plane.
     let unitPlaneXY: SCNGeometry
+    /// The plane that is one unit in size to show the xz plane.
     let unitPlaneXZ: SCNGeometry
+    /// The plane that is one unit in size to show the yz plane.
     let unitPlaneYZ: SCNGeometry
+    /// The node for the xy unit plane.
     let unitPlaneXYNode: SCNNode
+    /// The node for the xz unit plane.
     let unitPlaneXZNode: SCNNode
+    /// The node for the yz unit plane.
     let unitPlaneYZNode: SCNNode
     
+    /// The geometry for the wall on the xy plane.
     let wallXY: SCNGeometry
+    /// The geometry for the wall on the xz plane.
     let wallXZ: SCNGeometry
+    /// The geometry for the wall on the yz plane.
     let wallYZ: SCNGeometry
+    /// The geometry for the wall on the xy plane.
     let wallXYNode: SCNNode
+    /// The geometry for the wall on the xz plane.
     let wallXZNode: SCNNode
+    /// The geometry for the wall on the yz plane.
     let wallYZNode: SCNNode
     
+    /// The horizontal gridlines on the XY plane.
     public private(set) var gridLinesHorizontalXY = [SCNNode]()
+    /// The horizontal gridlines on the XZ plane.
     public private(set) var gridLinesHorizontalXZ = [SCNNode]()
+    /// The horizontal gridlines on the YZ plane.
     public private(set) var gridLinesHorizontalYZ = [SCNNode]()
+    /// The vertical gridlines on the XY plane.
     public private(set) var gridLinesVerticalXY = [SCNNode]()
+    /// The vertical gridlines on the XZ plane.
     public private(set) var gridLinesVerticalXZ = [SCNNode]()
+    /// The vertical gridlines on the YZ plane.
     public private(set) var gridLinesVerticalYZ = [SCNNode]()
     
+    /// The max value on the x axis (the value at the arrow).
     private var xMax: CGFloat
+    /// The max value on the y axis (the value at the arrow).
     private var yMax: CGFloat
+    /// The max value on the z axis (the value at the arrow).
     private var zMax: CGFloat
+    /// The min value on the x axis (the value at the origin).
     private var xMin: CGFloat
+    /// The min value on the y axis (the value at the origin).
     private var yMin: CGFloat
+    /// The min value on the z axis (the value at the origin).
     private var zMin: CGFloat
     
     // Plotting
+    /// The root node of all of the plotted points.
     private var plotPointRootNode: SCNNode
+    /// The plotted points.
     private var plottedPoints = [SCNNode]()
+    
     weak var dataSource: PlotDataSource?
     weak var delegate: PlotDelegate?
+    /// The `PlotView` that has the scene that this `PlotSpaceNode` is in.
     weak var plotView: PlotView?
     
     // MARK: - Init
     
+    /**
+     Initialize a `PlotSpaceNode` with the given configuration.
+     - parameter config: The configuration that defines the attributes to use.
+     */
     init(config: PlotConfiguration) {
         
         axisHeight = config.axisHeight
@@ -83,9 +134,9 @@ public class PlotSpaceNode: SCNNode {
         yAxisArrow = SCNCone(topRadius: 0, bottomRadius: config.arrowBottomRadius, height: config.arrowHeight)
         zAxisArrow = SCNCone(topRadius: 0, bottomRadius: config.arrowBottomRadius, height: config.arrowHeight)
         
-        xPlotSpaceNode = SCNNode(geometry: xAxis)
-        yPlotSpaceNode = SCNNode(geometry: yAxis)
-        zPlotSpaceNode = SCNNode(geometry: zAxis)
+        xAxisNode = SCNNode(geometry: xAxis)
+        yAxisNode = SCNNode(geometry: yAxis)
+        zAxisNode = SCNNode(geometry: zAxis)
         
         xArrowNode = SCNNode(geometry: xAxisArrow)
         yArrowNode = SCNNode(geometry: yAxisArrow)
@@ -135,14 +186,14 @@ public class PlotSpaceNode: SCNNode {
         setupUnitPlanes(xGridSpacing: xGridSpacing, yGridSpacing: yGridSpacing, zGridSpacing: zGridSpacing, config: config)
         
         // xy grid lines
-        gridLinesHorizontalXY += addGridLines(rootNode: xPlotSpaceNode, spacing: yGridSpacing, direction: PlotAxis.x.negativeDirection, color: config.xyGridColor)
-        gridLinesVerticalXY += addGridLines(rootNode: yPlotSpaceNode, spacing: xGridSpacing, direction: PlotAxis.x.direction, color: config.xyGridColor)
+        gridLinesHorizontalXY += addGridLines(rootNode: xAxisNode, spacing: yGridSpacing, direction: PlotAxis.x.negativeDirection, color: config.xyGridColor)
+        gridLinesVerticalXY += addGridLines(rootNode: yAxisNode, spacing: xGridSpacing, direction: PlotAxis.x.direction, color: config.xyGridColor)
         // xz grid lines
-        gridLinesHorizontalXZ += addGridLines(rootNode: xPlotSpaceNode, spacing: zGridSpacing, direction: PlotAxis.z.direction, color: config.xzGridColor)
-        gridLinesVerticalXZ += addGridLines(rootNode: zPlotSpaceNode, spacing: xGridSpacing, direction: PlotAxis.x.direction, color: config.xzGridColor)
+        gridLinesHorizontalXZ += addGridLines(rootNode: xAxisNode, spacing: zGridSpacing, direction: PlotAxis.z.direction, color: config.xzGridColor)
+        gridLinesVerticalXZ += addGridLines(rootNode: zAxisNode, spacing: xGridSpacing, direction: PlotAxis.x.direction, color: config.xzGridColor)
         // yz grid lines
-        gridLinesVerticalYZ += addGridLines(rootNode: yPlotSpaceNode, spacing: zGridSpacing, direction: PlotAxis.z.direction, color: config.yzGridColor)
-        gridLinesHorizontalYZ += addGridLines(rootNode: zPlotSpaceNode, spacing: yGridSpacing, direction: PlotAxis.z.negativeDirection, color: config.yzGridColor)
+        gridLinesVerticalYZ += addGridLines(rootNode: yAxisNode, spacing: zGridSpacing, direction: PlotAxis.z.direction, color: config.yzGridColor)
+        gridLinesHorizontalYZ += addGridLines(rootNode: zAxisNode, spacing: yGridSpacing, direction: PlotAxis.z.negativeDirection, color: config.yzGridColor)
         
         addWall(plane: .xy, color: config.xyPlaneColor)
         addWall(plane: .xz, color: config.xzPlaneColor)
@@ -157,23 +208,27 @@ public class PlotSpaceNode: SCNNode {
     
     // MARK: - Setup
     
+    /**
+     Sets up each axis and adds them as a child node.
+     - parameter axisHeight: The height of each axis.
+     */
     private func setupAxis(axisHeight: CGFloat) {
-        xPlotSpaceNode.position = SCNVector3(axisHeight/2, 0, 0)
-        xPlotSpaceNode.eulerAngles = SCNVector3(0, 0, -Double.pi/2)
+        xAxisNode.position = SCNVector3(axisHeight/2, 0, 0)
+        xAxisNode.eulerAngles = SCNVector3(0, 0, -Double.pi/2)
         xArrowNode.position = SCNVector3(0, axisHeight/2, 0)
-        xPlotSpaceNode.addChildNode(xArrowNode)
-        addChildNode(xPlotSpaceNode)
+        xAxisNode.addChildNode(xArrowNode)
+        addChildNode(xAxisNode)
 
-        yPlotSpaceNode.position = SCNVector3(0, axisHeight/2, 0)
+        yAxisNode.position = SCNVector3(0, axisHeight/2, 0)
         yArrowNode.position = SCNVector3(0, axisHeight/2, 0)
-        yPlotSpaceNode.addChildNode(yArrowNode)
-        addChildNode(yPlotSpaceNode)
+        yAxisNode.addChildNode(yArrowNode)
+        addChildNode(yAxisNode)
         
-        zPlotSpaceNode.position = SCNVector3(0, 0, axisHeight/2)
-        zPlotSpaceNode.eulerAngles = SCNVector3(Double.pi/2, 0, 0)
+        zAxisNode.position = SCNVector3(0, 0, axisHeight/2)
+        zAxisNode.eulerAngles = SCNVector3(Double.pi/2, 0, 0)
         zArrowNode.position = SCNVector3(0, axisHeight/2, 0)
-        zPlotSpaceNode.addChildNode(zArrowNode)
-        addChildNode(zPlotSpaceNode)
+        zAxisNode.addChildNode(zArrowNode)
+        addChildNode(zAxisNode)
 
         originGeometry.materials.first!.diffuse.contents = UIColor.white
         let originNode = SCNNode(geometry: originGeometry)
@@ -181,6 +236,14 @@ public class PlotSpaceNode: SCNNode {
         addChildNode(originNode)
     }
     
+    /**
+     Sets up the unit planes for each axis and adds them as child nodes.
+     - parameters:
+        - xGridSpacing: The spacing between gridlines on the x axis.
+        - yGridSpacing: The spacing between gridlines on the y axis.
+        - zGridSpacing: The spacing between gridlines on the z axis.
+        - config: The configuration which contains the colors to use for each grid.
+     */
     private func setupUnitPlanes(xGridSpacing: CGFloat, yGridSpacing: CGFloat, zGridSpacing: CGFloat, config: PlotConfiguration) {
         let xOffset = xGridSpacing/2
         let yOffset = yGridSpacing/2
@@ -201,6 +264,15 @@ public class PlotSpaceNode: SCNNode {
         addChildNode(unitPlaneYZNode)
     }
     
+    /**
+    Adds gridlines to the given node in the given direction.  The gridlines are added as children to the root node.
+    - parameters:
+       - rootNode: The node that the gridlines will be added to.
+       - spacing: The spacing between gridlines.
+       - direction: The direction to place the gridlines.
+       - color: The color for the gridlines.
+     - returns: The array of nodes that contains the gridlines that were added.
+    */
     private func addGridLines(rootNode: SCNNode, spacing: CGFloat, direction: SCNVector3, color: UIColor) -> [SCNNode] {
         let lineCount = Int(axisHeight/spacing)
         var gridLines = [SCNNode]()
@@ -217,6 +289,12 @@ public class PlotSpaceNode: SCNNode {
         return gridLines
     }
     
+    /**
+     Adds the wall for the given plane.
+     - parameters:
+        - plane: The plane for the wall to be added on.
+        - color: The color of the wall go add.
+     */
     private func addWall(plane: PlotPlane, color: UIColor) {
         setWall(plane, color: color)
         
