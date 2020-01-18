@@ -200,6 +200,10 @@ public class PlotSpaceNode: SCNNode {
         addWall(plane: .yz, color: config.yzPlaneColor)
         
         addChildNode(plotPointRootNode)
+        
+        addAxisTextNode(createLabelNode("x axis"), axis: .x)
+        addAxisTextNode(createLabelNode("y axis"), axis: .y)
+        addAxisTextNode(createLabelNode("z axis"), axis: .z)
     }
     
     required init?(coder: NSCoder) {
@@ -492,6 +496,46 @@ public class PlotSpaceNode: SCNNode {
         case PlotPlane.yz:
             wallYZ.materials.first!.diffuse.contents = color
         }
+    }
+    
+    // MARK: - Labels
+    
+    func createLabelNode(_ text: String) -> SCNNode {
+        let label = SCNText(string: text, extrusionDepth: 0)
+        label.flatness = 0.001
+        label.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 0.5)
+        
+        let textNode = SCNNode(geometry: label)
+        addChildNode(textNode)
+        
+        let (min, max) = (label.boundingBox.min, label.boundingBox.max)
+        let dx = min.x + 0.5 * (max.x - min.x)
+        let dy = min.y + 0.5 * (max.y - min.y)
+        let dz = min.z + 0.5 * (max.z - min.z)
+        textNode.pivot = SCNMatrix4MakeTranslation(dx, dy, dz)
+        
+        textNode.position = SCNVector3((axisHeight)/2, 0, 2 + axisHeight)
+        textNode.eulerAngles = SCNVector3(-Double.pi/2, 0, 0)
+        
+        return textNode
+    }
+    
+    func addAxisTextNode(_ textNode: SCNNode, axis: PlotAxis) {
+        let offset: CGFloat = 0.5
+        let axisAndOffset = offset + axisHeight
+        switch axis {
+        case .x:
+            textNode.position = SCNVector3((axisHeight)/2, 0, axisAndOffset)
+            textNode.eulerAngles = SCNVector3(-Double.pi/2, 0, 0)
+        case .y:
+            textNode.position = SCNVector3(0, (axisHeight)/2, axisAndOffset)
+            textNode.eulerAngles = SCNVector3(-Double.pi/2, 0, -Double.pi/2)
+        case .z:
+            textNode.position = SCNVector3(axisAndOffset, 0, (axisHeight)/2)
+            textNode.eulerAngles = SCNVector3(-Double.pi/2, Double.pi/2, 0)
+        }
+        
+        addChildNode(textNode)
     }
     
 }
