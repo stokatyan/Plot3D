@@ -319,14 +319,44 @@ public class PlotSpaceNode: SCNNode {
     
     // MARK: - Plotting
     
+    /**
+     Calculates the scene coordinate for a value on an axis in a plot space.
+     - parameters:
+        - value: The value to convert to a scene coordinate.
+        - axisMaxValue: The max value of the axis.
+        - axisMinValue: The min value of the axis.
+        - axisHeight: the scene height of the axis.
+     
+     - returns: The float that corresponds to a coordinate on an axis in the scene.
+     */
     private static func coordinate(forValue value: CGFloat, axisMaxValue: CGFloat, axisMinValue: CGFloat, axisHeight: CGFloat) -> CGFloat {
         return value * (axisHeight/(axisMaxValue - axisMinValue))
     }
     
+    /**
+    Calculates the scene coordinate for a value on an axis in a plot space.
+    - parameters:
+       - value: The value to convert to a scene coordinate.
+       - axisMaxValue: The max value of the axis.
+       - axisMinValue: The min value of the axis.
+    
+    - returns: The float that corresponds to a coordinate on an axis in the scene.
+    */
     private func coordinate(forValue value: CGFloat, axisMaxValue: CGFloat, axisMinValue: CGFloat) -> CGFloat {
         return PlotSpaceNode.coordinate(forValue: value, axisMaxValue: axisMaxValue, axisMinValue: axisMinValue, axisHeight: self.axisHeight)
     }
     
+    /**
+     Plots the given point of raw data into the scene.
+     
+     The given point should not be modified for the scene.
+     The plot point will be converted to scene coordinate using `self.coordinate(_:)`.
+     
+     - parameters:
+        - point: The raw data point to plot.
+        - geometry: The geometry of the node plotted in the scene for the given coordinate.
+     
+     */
     private func plot(_ point: PlotPoint, geometry: SCNGeometry?) {
         let pointNode = PlotPointNode(geometry: geometry, index: plottedPoints.count)
         let x = coordinate(forValue: point.x, axisMaxValue: xMax, axisMinValue: xMin)
@@ -338,6 +368,11 @@ public class PlotSpaceNode: SCNNode {
         plotPointRootNode.addChildNode(pointNode)
     }
     
+    /**
+     Safely returns the node plotted at the given index.
+     - parameter index: the index of that plotted node.
+     - returns: an optional reference to the `SCNNode` that is plotted at the given index.
+     */
     func plottedPoint(atIndex index: Int) -> SCNNode? {
         guard index < plottedPoints.count else {
             return nil
@@ -348,6 +383,11 @@ public class PlotSpaceNode: SCNNode {
     
     // MARK: - Update Plot
     
+    /**
+     Plots any points that were added aftter the latest call to `refresh` or `plotNewPoints`.
+     
+     This function is intended for cases where most of the data has already been plotted, and only a couple of additional points need to be plotted.
+     */
     func plotNewPoints() {
         guard let dataSource = dataSource, let delegate = delegate, let plotView = plotView else {
             return
@@ -368,7 +408,11 @@ public class PlotSpaceNode: SCNNode {
         }
     }
     
-    func refresh() {
+    /**
+     Reloads the plotted points using the plot data source and plot delegate.
+     This function is analagous to a `UITableView`'s `reloadData()` function.
+     */
+    func reloadData() {
         removeAllPlottedPoints()
         
         guard let dataSource = dataSource, let delegate = delegate, let plotView = plotView else {
@@ -387,6 +431,9 @@ public class PlotSpaceNode: SCNNode {
         }
     }
     
+    /**
+     Removes all of the plotted points from the `PlotSpaceNode` and removes all of the nodes stored in `plottedPoints`.
+     */
     private func removeAllPlottedPoints() {
         plottedPoints.removeAll()
         plotPointRootNode.removeFromParentNode()
@@ -396,6 +443,12 @@ public class PlotSpaceNode: SCNNode {
     
     // MARK: Update Configuration
     
+    /**
+     Sets the value of `isHidden` for the unit plane on the given `PlotPlane`.
+     - parameters:
+        - plane: The plane that contains the unit plane is intended for.
+        - isHidden: Whether or not the unit plane should be hidden.
+     */
     func setUnitPlane(_ plane: PlotPlane, isHidden: Bool) {
         switch plane {
         case PlotPlane.xy:
@@ -407,6 +460,12 @@ public class PlotSpaceNode: SCNNode {
         }
     }
     
+    /**
+    Sets the value of `isHidden` for the wall on the given `PlotPlane`.
+    - parameters:
+       - plane: The plane that contains the unit plane is intended for.
+       - isHidden: Whether or not the wall should be hidden.
+    */
     func setWall(_ plane: PlotPlane, isHidden: Bool) {
         switch plane {
         case PlotPlane.xy:
@@ -418,6 +477,12 @@ public class PlotSpaceNode: SCNNode {
         }
     }
     
+    /**
+    Sets the color for the wall on the given `PlotPlane`.
+    - parameters:
+       - plane: The plane that contains the unit plane is intended for.
+       - color: The color for the wall.
+    */
     func setWall(_ plane: PlotPlane, color: UIColor) {
         switch plane {
         case PlotPlane.xy:

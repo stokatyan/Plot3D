@@ -104,8 +104,8 @@ public class PlotView: UIView {
         return plotSpace.plottedPoint(atIndex: index)
     }
     
-    public func refresh() {
-        plotSpace.refresh()
+    public func reloadData() {
+        plotSpace.reloadData()
     }
         
     // MARK: - Getters
