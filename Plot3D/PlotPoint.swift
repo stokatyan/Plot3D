@@ -10,7 +10,7 @@ import SceneKit
 
 /**
  A point that can be plotted onto a `PlotView`.
- This object is sued to avoid having to import `SceneKit` when creating the points to plot.
+ This object is used to avoid having to import `SceneKit` when creating the points to plot.
  */
 public class PlotPoint {
     var x: CGFloat

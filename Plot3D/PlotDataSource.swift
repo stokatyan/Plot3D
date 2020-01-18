@@ -8,6 +8,12 @@
 
 import Foundation
 
+/**
+ A protocol for getting the data source of a plot.
+ */
 public protocol PlotDataSource: class {
+    /**
+     - returns: The number of points to plot.
+     */
     func numberOfPoints() -> Int
 }

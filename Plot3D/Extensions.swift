@@ -8,18 +8,9 @@
 
 import SceneKit
 
-extension SCNGeometry {
-    static func lineFrom(vector vector1: SCNVector3, toVector vector2: SCNVector3) -> SCNGeometry {
-        let indices: [Int32] = [0, 1]
-
-        let source = SCNGeometrySource(vertices: [vector1, vector2])
-        let element = SCNGeometryElement(indices: indices, primitiveType: .line)
-
-        return SCNGeometry(sources: [source], elements: [element])
-    }
-}
-
 /**
+ An extension to support element-wise multiplication between two `SCNVector3`s.
+ 
  - returns: The element-wise product of two vectors.
  */
 func * (left: SCNVector3, right: SCNVector3) -> SCNVector3 {
