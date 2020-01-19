@@ -196,9 +196,9 @@ public class PlotView: UIView {
                              fontName: String = "AppleSDGothicNeo-UltraLight",
                              fontSize: CGFloat = 0.5,
                              flatness: CGFloat = 0.001,
-                             offset: CGFloat = 0.5) {
-        let plotText = PlotText(text: text, textColor: textColor, fontName: fontName, fontSize: fontSize, flatness: flatness)
-        plotSpace.setAxisTitle(axis, plotText: plotText, offset: offset)
+                             offset: CGFloat = 0.6) {
+        let plotText = PlotText(text: text, textColor: textColor, fontName: fontName, fontSize: fontSize, flatness: flatness, offset: offset)
+        plotSpace.setAxisTitle(axis, plotText: plotText)
     }
     
     /**

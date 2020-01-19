@@ -37,6 +37,10 @@ public class PlotSpaceNode: SCNNode {
     /// The geometry of the origin node.
     let originGeometry: SCNGeometry
     
+    var xTickMarksNode = SCNNode()
+    var yTickMarksNode = SCNNode()
+    var zTickMarksNode = SCNNode()
+    
     var xAxisTitleNode = SCNNode()
     var yAxisTitleNode = SCNNode()
     var zAxisTitleNode = SCNNode()
@@ -294,6 +298,63 @@ public class PlotSpaceNode: SCNNode {
     }
     
     /**
+     Updates the gridline tick marks by first removing the existing ones, and then delegating to the instances plot delegate to add new tick marks.
+     */
+    private func updateTickMarks() {
+        xTickMarksNode.removeFromParentNode()
+        yTickMarksNode.removeFromParentNode()
+        zTickMarksNode.removeFromParentNode()
+        
+        xTickMarksNode = SCNNode()
+        yTickMarksNode = SCNNode()
+        zTickMarksNode = SCNNode()
+        
+        addChildNode(xTickMarksNode)
+        addChildNode(yTickMarksNode)
+        addChildNode(zTickMarksNode)
+        
+        guard let delegate = delegate else {
+            return
+        }
+        
+        // x
+        for (index, gridline) in gridLinesVerticalXZ.enumerated() {
+            let position = gridline.position.x
+            guard let text = delegate.plot(plotView!, textAtTickMark: index, forAxis: .x) else {
+                continue
+            }
+            let textNode = text.node
+            textNode.eulerAngles = tickMarkTextRotation(forAxis: .x)
+            textNode.position = SCNVector3(CGFloat(position), 0, axisHeight + text.offset)
+            xTickMarksNode.addChildNode(textNode)
+        }
+        
+        // y
+        for (index, gridline) in gridLinesHorizontalYZ.enumerated() {
+            let position = -gridline.position.z
+            guard let text = delegate.plot(plotView!, textAtTickMark: index, forAxis: .y) else {
+                continue
+            }
+            let textNode = text.node
+            textNode.eulerAngles = tickMarkTextRotation(forAxis: .y)
+            textNode.position = SCNVector3(0, CGFloat(position), axisHeight + text.offset)
+            yTickMarksNode.addChildNode(textNode)
+        }
+        
+        // z
+        for (index, gridline) in gridLinesHorizontalXZ.enumerated() {
+            let position = gridline.position.z
+            guard let text = delegate.plot(plotView!, textAtTickMark: index, forAxis: .z) else {
+                continue
+            }
+            let textNode = text.node
+            textNode.eulerAngles = tickMarkTextRotation(forAxis: .z)
+            textNode.position = SCNVector3(axisHeight + text.offset, 0, CGFloat(position))
+            zTickMarksNode.addChildNode(textNode)
+        }
+    }
+    
+    /**
      Adds the wall for the given plane.
      - parameters:
         - plane: The plane for the wall to be added on.
@@ -414,10 +475,13 @@ public class PlotSpaceNode: SCNNode {
     
     /**
      Reloads the plotted points using the plot data source and plot delegate.
+     
      This function is analagous to a `UITableView`'s `reloadData()` function.
+     It will remove all tick marks and all plotted points, and then add new tick marks using its delegate, and plot the new data using the delegate and datasource.
      */
     func reloadData() {
         removeAllPlottedPoints()
+        updateTickMarks()
         
         guard let dataSource = dataSource, let delegate = delegate, let plotView = plotView else {
             return
@@ -505,36 +569,55 @@ public class PlotSpaceNode: SCNNode {
      - parameters:
         - axis: The axis to set a title for.
         - plotText: The PlotText object to use to generate the node for the axis title.
-        - offset: The offset between the top of the title and the axis height.
     */
     func setAxisTitle(_ axis: PlotAxis,
-                      plotText: PlotText,
-                      offset: CGFloat) {
+                      plotText: PlotText) {
         var axisTitleNode: SCNNode
         
-        let axisAndOffset = offset + axisHeight
+        let axisAndOffset = plotText.offset + axisHeight
         switch axis {
         case .x:
             xAxisTitleNode.removeFromParentNode()
             xAxisTitleNode = plotText.node
             axisTitleNode = xAxisTitleNode
             axisTitleNode.position = SCNVector3((axisHeight)/2, 0, axisAndOffset)
-            axisTitleNode.eulerAngles = SCNVector3(-Double.pi/2, 0, 0)
         case .y:
             yAxisTitleNode.removeFromParentNode()
             yAxisTitleNode = plotText.node
             axisTitleNode = yAxisTitleNode
             axisTitleNode.position = SCNVector3(0, (axisHeight)/2, axisAndOffset)
-            axisTitleNode.eulerAngles = SCNVector3(-Double.pi/2, 0, -Double.pi/2)
+            
         case .z:
             zAxisTitleNode.removeFromParentNode()
             zAxisTitleNode = plotText.node
             axisTitleNode = zAxisTitleNode
             axisTitleNode.position = SCNVector3(axisAndOffset, 0, (axisHeight)/2)
-            axisTitleNode.eulerAngles = SCNVector3(-Double.pi/2, Double.pi/2, 0)
         }
         
+        axisTitleNode.eulerAngles = axisTextRotation(forAxis: axis)
         addChildNode(axisTitleNode)
+    }
+    
+    func axisTextRotation(forAxis axis: PlotAxis) -> SCNVector3 {
+        switch axis {
+        case .x:
+            return SCNVector3(-Double.pi/2, 0, 0)
+        case .y:
+           return SCNVector3(-Double.pi/2, 0, -Double.pi/2)
+        case .z:
+            return SCNVector3(-Double.pi/2, Double.pi/2, 0)
+        }
+    }
+    
+    func tickMarkTextRotation(forAxis axis: PlotAxis) -> SCNVector3 {
+        switch axis {
+        case .x:
+            return SCNVector3(-Double.pi/2, 0, 0)
+        case .y:
+           return SCNVector3(-Double.pi/2, Double.pi/2, -Double.pi/2)
+        case .z:
+            return SCNVector3(-Double.pi/2, Double.pi/2, 0)
+        }
     }
     
 }
