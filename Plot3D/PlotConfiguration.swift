@@ -68,28 +68,56 @@ public struct PlotConfiguration {
     /// The thickness of each plane.
     let planeThickness: CGFloat
     
-    static let defaultConfig = PlotConfiguration(axisRadius: 0.035,
-                                                 axisHeight: 7,
-                                                 gridlineRadius: 0.009,
-                                                 arrowBottomRadius: 0.15,
-                                                 arrowHeight: 0.3,
-                                                 xTickInterval: 1,
-                                                 yTickInterval: 2,
-                                                 zTickInterval: 2.5,
-                                                 xMax: 15,
-                                                 yMax: 15,
-                                                 zMax: 15,
-                                                 xMin: 0,
-                                                 yMin: 0,
-                                                 zMin: 0,
-                                                 xyGridColor: .red,
-                                                 xzGridColor: .green,
-                                                 yzGridColor: .yellow,
-                                                 xyUnitPlaneColor: UIColor.red.withAlphaComponent(0.3),
-                                                 xzUnitPlaneColor: UIColor.green.withAlphaComponent(0.3),
-                                                 yzUnitPlaneColor: UIColor.yellow.withAlphaComponent(0.3),
-                                                 xyPlaneColor: UIColor.red.withAlphaComponent(0.2),
-                                                 xzPlaneColor: UIColor.green.withAlphaComponent(0.2),
-                                                 yzPlaneColor: UIColor.yellow.withAlphaComponent(0.2),
-                                                 planeThickness: 0.01)
+    public init(axisRadius: CGFloat = 0.035,
+         axisHeight: CGFloat = 7,
+         gridlineRadius: CGFloat = 0.009,
+         arrowBottomRadius: CGFloat = 0.15,
+         arrowHeight: CGFloat = 0.3,
+         xTickInterval: CGFloat = 1,
+         yTickInterval: CGFloat = 2,
+         zTickInterval: CGFloat = 2.5,
+         xMax: CGFloat = 15,
+         yMax: CGFloat = 15,
+         zMax: CGFloat = 15,
+         xMin: CGFloat = 0,
+         yMin: CGFloat = 0,
+         zMin: CGFloat = 0,
+         xyGridColor: UIColor = .red,
+         xzGridColor: UIColor = .green,
+         yzGridColor: UIColor = .yellow,
+         xyUnitPlaneColor: UIColor = UIColor.red.withAlphaComponent(0.3),
+         xzUnitPlaneColor: UIColor = UIColor.green.withAlphaComponent(0.3),
+         yzUnitPlaneColor: UIColor = UIColor.yellow.withAlphaComponent(0.3),
+         xyPlaneColor: UIColor = UIColor.red.withAlphaComponent(0.2),
+         xzPlaneColor: UIColor = UIColor.green.withAlphaComponent(0.2),
+         yzPlaneColor: UIColor = UIColor.yellow.withAlphaComponent(0.2),
+         planeThickness: CGFloat = 0.01) {
+        
+        self.axisRadius = axisRadius
+        self.axisHeight = axisHeight
+        self.gridlineRadius = gridlineRadius
+        self.arrowBottomRadius = arrowBottomRadius
+        self.arrowHeight = arrowHeight
+        self.xTickInterval = xTickInterval
+        self.yTickInterval = yTickInterval
+        self.zTickInterval = zTickInterval
+        self.xMax = xMax
+        self.yMax = yMax
+        self.zMax = zMax
+        self.xMin = xMin
+        self.yMin = yMin
+        self.zMin = zMin
+        self.xyGridColor = xyGridColor
+        self.xzGridColor = xzGridColor
+        self.yzGridColor = yzGridColor
+        self.xyUnitPlaneColor = xyUnitPlaneColor
+        self.xzUnitPlaneColor = xzUnitPlaneColor
+        self.yzUnitPlaneColor = yzUnitPlaneColor
+        self.xyPlaneColor = xyPlaneColor
+        self.xzPlaneColor = xzPlaneColor
+        self.yzPlaneColor = yzPlaneColor
+        self.planeThickness = planeThickness
+    
+    }
+    
 }

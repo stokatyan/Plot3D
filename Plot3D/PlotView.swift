@@ -51,11 +51,11 @@ public class PlotView: UIView {
     /**
      Initializes a `PlotView` with the given frame.
      */
-    public override init(frame: CGRect) {
+    public init(frame: CGRect, configuration: PlotConfiguration) {
         sceneView = SCNView(frame: CGRect(x: 0, y: 0, width: frame.width, height: frame.height))
         scene = SCNScene()
         cameraNode = SCNNode()
-        plotSpace = PlotSpaceNode(config: PlotConfiguration.defaultConfig)
+        plotSpace = PlotSpaceNode(config: configuration)
         
         super.init(frame: frame)
         setupScene()
