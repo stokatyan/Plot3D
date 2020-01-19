@@ -14,6 +14,26 @@ import SceneKit
 public protocol PlotDelegate: class {
     
     /**
+     The method that delegates the hnadling of a tapped node..
+     - parameters:
+        - plotView: The `PlotView` that is used for showing the 3D plot.
+        - node: The `SCNNode` of the `Geometry` that has been selected.
+        - index: The index of the item that was selected.
+    */
+    func plot(_ plotView: PlotView, didSelectNode node: PlotPointNode, atIndex index: Int)
+    
+    /**
+     The method that delegates providing the geometries to plot.
+     - parameters:
+        - plotView: The `PlotView` that is used for showing the 3D plot.
+        - index: The index of the item to plot.
+    
+     - returns:
+     An optional `SCNGeometry` for the item being plotted at the given index.  If this is `nil`, then no visible geometry is plotted.
+    */
+    func plot(_ plotView: PlotView, geometryForItemAt index: Int) -> SCNGeometry?
+    
+    /**
      The method that delegates providing the points to plot.
      - parameters:
         - plotView: The `PlotView` that is used for showing the 3D plot.
@@ -24,27 +44,20 @@ public protocol PlotDelegate: class {
     func plot(_ plotView: PlotView, pointForItemAt index: Int) -> PlotPoint
     
     /**
-    The method that delegates providing the geometries to plot.
-    - parameters:
-       - plotView: The `PlotView` that is used for showing the 3D plot.
-       - index: The index of the item to plot.
-    - returns:
-    An optional `SCNGeometry` for the item being plotted at the given index.  If this is `nil`, then no visible geometry is plotted.
-    */
-    func plot(_ plotView: PlotView, geometryForItemAt index: Int) -> SCNGeometry?
+     The method that delegates providing the points to plot.
+     - parameters:
+        - plotView: The `PlotView` that is used for showing the 3D plot.
+        - index: The index of the item to plot.
+     - returns:
+     A `PlotPoint` for the coordinate to plot.
+     */
+    func plot(_ plotView: PlotView, textAtTickMark index: Int, forAxis axis: PlotAxis) -> PlotText?
     
-    /**
-    The method that delegates the hnadling of a tapped node..
-    - parameters:
-       - plotView: The `PlotView` that is used for showing the 3D plot.
-       - node: The `SCNNode` of the `Geometry` that has been selected.
-       - index: The index of the item that was selected.
-    */
-    func plot(_ plotView: PlotView, didSelectNode node: PlotPointNode, atIndex index: Int)
 }
 
 // MARK: - Default Implementations
 
 public extension PlotDelegate {
     func plot(_ plotView: PlotView, didSelectNode node: PlotPointNode, atIndex index: Int) {}
+    func plot(_ plotView: PlotView, textAtTickMark index: Int, forAxis axis: PlotAxis) -> PlotText? {return nil}
 }

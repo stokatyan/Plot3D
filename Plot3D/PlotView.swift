@@ -51,11 +51,11 @@ public class PlotView: UIView {
     /**
      Initializes a `PlotView` with the given frame.
      */
-    public override init(frame: CGRect) {
+    public init(frame: CGRect, configuration: PlotConfiguration) {
         sceneView = SCNView(frame: CGRect(x: 0, y: 0, width: frame.width, height: frame.height))
         scene = SCNScene()
         cameraNode = SCNNode()
-        plotSpace = PlotSpaceNode(config: PlotConfiguration.defaultConfig)
+        plotSpace = PlotSpaceNode(config: configuration)
         
         super.init(frame: frame)
         setupScene()
@@ -178,6 +178,28 @@ public class PlotView: UIView {
     }
     
     // MARK: - Setters
+    
+    /**
+     Sets a title for the given axis.
+     - parameters:
+        - axis: The axis to set a title for.
+        - text: The text to use for the created node's geometry.
+        - textColor: The color to use for the created node's geometry.
+        - fontName: The name of the font for the text.
+        - fontSize: The size of the font for the text.
+        - flatness: A number that determines the accuracy or smoothness of the text geometry, the closer to 0 the smoother the geometry.
+        - offset: The offset between the top of the title and the axis height.
+    */
+    public func setAxisTitle(_ axis: PlotAxis,
+                             text: String,
+                             textColor: UIColor = .lightText,
+                             fontName: String = "AppleSDGothicNeo-UltraLight",
+                             fontSize: CGFloat = 0.5,
+                             flatness: CGFloat = 0.001,
+                             offset: CGFloat = 0.6) {
+        let plotText = PlotText(text: text, textColor: textColor, fontName: fontName, fontSize: fontSize, flatness: flatness, offset: offset)
+        plotSpace.setAxisTitle(axis, plotText: plotText)
+    }
     
     /**
      Sets the camera position using a `PlotPoint` instead of an SCNVector.
