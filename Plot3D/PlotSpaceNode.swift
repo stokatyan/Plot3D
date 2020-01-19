@@ -37,6 +37,10 @@ public class PlotSpaceNode: SCNNode {
     /// The geometry of the origin node.
     let originGeometry: SCNGeometry
     
+    var xAxisTitleNode = SCNNode()
+    var yAxisTitleNode = SCNNode()
+    var zAxisTitleNode = SCNNode()
+    
     // Axis Arrows
     /// The geometry of the arrow on the x axis.
     let xAxisArrow: SCNGeometry
@@ -200,10 +204,6 @@ public class PlotSpaceNode: SCNNode {
         addWall(plane: .yz, color: config.yzPlaneColor)
         
         addChildNode(plotPointRootNode)
-        
-        addAxisTextNode(createLabelNode("x axis"), axis: .x)
-        addAxisTextNode(createLabelNode("y axis"), axis: .y)
-        addAxisTextNode(createLabelNode("z axis"), axis: .z)
     }
     
     required init?(coder: NSCoder) {
@@ -499,11 +499,73 @@ public class PlotSpaceNode: SCNNode {
     }
     
     // MARK: - Labels
+
+    /**
+    Sets a title for the given axis.
+     
+    - parameters:
+        - axis: The axis to set a title for.
+        - text: The text to use for the created node's geometry.
+        - textColor: The color to use for the created node's geometry.
+        - fontName: The name of the font for the text.
+        - fontSize: The size of the font for the text.
+        - flatness: A number that determines the accuracy or smoothness of the text geometry, the closer to 0 the smoother the geometry.
+        - offset: The offset between the top of the title and the axis height.
+    */
+    func setAxisTitle(_ axis: PlotAxis,
+                      text: String,
+                      textColor: UIColor,
+                      fontName: String,
+                      fontSize: CGFloat,
+                      flatness: CGFloat,
+                      offset: CGFloat) {
+        var axisTitleNode: SCNNode
+        
+        let axisAndOffset = offset + axisHeight
+        switch axis {
+        case .x:
+            xAxisTitleNode.removeFromParentNode()
+            xAxisTitleNode = createAxisTitleNode(text, textColor: textColor, fontName: fontName, fontSize: fontSize, flatness: flatness)
+            axisTitleNode = xAxisTitleNode
+            axisTitleNode.position = SCNVector3((axisHeight)/2, 0, axisAndOffset)
+            axisTitleNode.eulerAngles = SCNVector3(-Double.pi/2, 0, 0)
+        case .y:
+            yAxisTitleNode.removeFromParentNode()
+            yAxisTitleNode = createAxisTitleNode(text, textColor: textColor, fontName: fontName, fontSize: fontSize, flatness: flatness)
+            axisTitleNode = yAxisTitleNode
+            axisTitleNode.position = SCNVector3(0, (axisHeight)/2, axisAndOffset)
+            axisTitleNode.eulerAngles = SCNVector3(-Double.pi/2, 0, -Double.pi/2)
+        case .z:
+            zAxisTitleNode.removeFromParentNode()
+            zAxisTitleNode = createAxisTitleNode(text, textColor: textColor, fontName: fontName, fontSize: fontSize, flatness: flatness)
+            axisTitleNode = zAxisTitleNode
+            axisTitleNode.position = SCNVector3(axisAndOffset, 0, (axisHeight)/2)
+            axisTitleNode.eulerAngles = SCNVector3(-Double.pi/2, Double.pi/2, 0)
+        }
+        
+        addChildNode(axisTitleNode)
+    }
     
-    func createLabelNode(_ text: String) -> SCNNode {
+    /**
+     Creates a node containing text that can be used for an axis title.
+     - parameters:
+        - text: The text to use for the created node's geometry.
+        - textColor: The color to use for the created node's geometry.
+        - fontName: The name of the font for the text.
+        - fontSize: The size of the font for the text.
+        - flatness: A number that determines the accuracy or smoothness of the text geometry, the closer to 0 the smoother the geometry.
+     
+     - returns: An `SCNNode` with a configured `SCNText` for its geometry.
+     */
+    func createAxisTitleNode(_ text: String,
+                             textColor: UIColor,
+                             fontName: String,
+                             fontSize: CGFloat,
+                             flatness: CGFloat) -> SCNNode {
         let label = SCNText(string: text, extrusionDepth: 0)
-        label.flatness = 0.001
-        label.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 0.5)
+        label.flatness = flatness
+        label.font = UIFont(name: fontName, size: fontSize)
+        label.materials.first!.diffuse.contents = textColor
         
         let textNode = SCNNode(geometry: label)
         addChildNode(textNode)
@@ -514,28 +576,9 @@ public class PlotSpaceNode: SCNNode {
         let dz = min.z + 0.5 * (max.z - min.z)
         textNode.pivot = SCNMatrix4MakeTranslation(dx, dy, dz)
         
-        textNode.position = SCNVector3((axisHeight)/2, 0, 2 + axisHeight)
-        textNode.eulerAngles = SCNVector3(-Double.pi/2, 0, 0)
-        
         return textNode
     }
     
-    func addAxisTextNode(_ textNode: SCNNode, axis: PlotAxis) {
-        let offset: CGFloat = 0.5
-        let axisAndOffset = offset + axisHeight
-        switch axis {
-        case .x:
-            textNode.position = SCNVector3((axisHeight)/2, 0, axisAndOffset)
-            textNode.eulerAngles = SCNVector3(-Double.pi/2, 0, 0)
-        case .y:
-            textNode.position = SCNVector3(0, (axisHeight)/2, axisAndOffset)
-            textNode.eulerAngles = SCNVector3(-Double.pi/2, 0, -Double.pi/2)
-        case .z:
-            textNode.position = SCNVector3(axisAndOffset, 0, (axisHeight)/2)
-            textNode.eulerAngles = SCNVector3(-Double.pi/2, Double.pi/2, 0)
-        }
-        
-        addChildNode(textNode)
-    }
+    
     
 }
