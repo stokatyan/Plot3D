@@ -180,9 +180,8 @@ public class PlotView: UIView {
     // MARK: - Setters
     
     /**
-    Sets a title for the given axis.
-     
-    - parameters:
+     Sets a title for the given axis.
+     - parameters:
         - axis: The axis to set a title for.
         - text: The text to use for the created node's geometry.
         - textColor: The color to use for the created node's geometry.
@@ -198,7 +197,8 @@ public class PlotView: UIView {
                              fontSize: CGFloat = 0.5,
                              flatness: CGFloat = 0.001,
                              offset: CGFloat = 0.5) {
-        plotSpace.setAxisTitle(axis, text: text, textColor: textColor, fontName: fontName, fontSize: fontSize, flatness: flatness, offset: offset)
+        let plotText = PlotText(text: text, textColor: textColor, fontName: fontName, fontSize: fontSize, flatness: flatness)
+        plotSpace.setAxisTitle(axis, plotText: plotText, offset: offset)
     }
     
     /**

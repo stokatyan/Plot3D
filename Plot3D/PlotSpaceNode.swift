@@ -501,23 +501,14 @@ public class PlotSpaceNode: SCNNode {
     // MARK: - Labels
 
     /**
-    Sets a title for the given axis.
-     
-    - parameters:
+     Sets a title for the given axis.
+     - parameters:
         - axis: The axis to set a title for.
-        - text: The text to use for the created node's geometry.
-        - textColor: The color to use for the created node's geometry.
-        - fontName: The name of the font for the text.
-        - fontSize: The size of the font for the text.
-        - flatness: A number that determines the accuracy or smoothness of the text geometry, the closer to 0 the smoother the geometry.
+        - plotText: The PlotText object to use to generate the node for the axis title.
         - offset: The offset between the top of the title and the axis height.
     */
     func setAxisTitle(_ axis: PlotAxis,
-                      text: String,
-                      textColor: UIColor,
-                      fontName: String,
-                      fontSize: CGFloat,
-                      flatness: CGFloat,
+                      plotText: PlotText,
                       offset: CGFloat) {
         var axisTitleNode: SCNNode
         
@@ -525,19 +516,19 @@ public class PlotSpaceNode: SCNNode {
         switch axis {
         case .x:
             xAxisTitleNode.removeFromParentNode()
-            xAxisTitleNode = createAxisTitleNode(text, textColor: textColor, fontName: fontName, fontSize: fontSize, flatness: flatness)
+            xAxisTitleNode = plotText.node
             axisTitleNode = xAxisTitleNode
             axisTitleNode.position = SCNVector3((axisHeight)/2, 0, axisAndOffset)
             axisTitleNode.eulerAngles = SCNVector3(-Double.pi/2, 0, 0)
         case .y:
             yAxisTitleNode.removeFromParentNode()
-            yAxisTitleNode = createAxisTitleNode(text, textColor: textColor, fontName: fontName, fontSize: fontSize, flatness: flatness)
+            yAxisTitleNode = plotText.node
             axisTitleNode = yAxisTitleNode
             axisTitleNode.position = SCNVector3(0, (axisHeight)/2, axisAndOffset)
             axisTitleNode.eulerAngles = SCNVector3(-Double.pi/2, 0, -Double.pi/2)
         case .z:
             zAxisTitleNode.removeFromParentNode()
-            zAxisTitleNode = createAxisTitleNode(text, textColor: textColor, fontName: fontName, fontSize: fontSize, flatness: flatness)
+            zAxisTitleNode = plotText.node
             axisTitleNode = zAxisTitleNode
             axisTitleNode.position = SCNVector3(axisAndOffset, 0, (axisHeight)/2)
             axisTitleNode.eulerAngles = SCNVector3(-Double.pi/2, Double.pi/2, 0)
@@ -545,40 +536,5 @@ public class PlotSpaceNode: SCNNode {
         
         addChildNode(axisTitleNode)
     }
-    
-    /**
-     Creates a node containing text that can be used for an axis title.
-     - parameters:
-        - text: The text to use for the created node's geometry.
-        - textColor: The color to use for the created node's geometry.
-        - fontName: The name of the font for the text.
-        - fontSize: The size of the font for the text.
-        - flatness: A number that determines the accuracy or smoothness of the text geometry, the closer to 0 the smoother the geometry.
-     
-     - returns: An `SCNNode` with a configured `SCNText` for its geometry.
-     */
-    func createAxisTitleNode(_ text: String,
-                             textColor: UIColor,
-                             fontName: String,
-                             fontSize: CGFloat,
-                             flatness: CGFloat) -> SCNNode {
-        let label = SCNText(string: text, extrusionDepth: 0)
-        label.flatness = flatness
-        label.font = UIFont(name: fontName, size: fontSize)
-        label.materials.first!.diffuse.contents = textColor
-        
-        let textNode = SCNNode(geometry: label)
-        addChildNode(textNode)
-        
-        let (min, max) = (label.boundingBox.min, label.boundingBox.max)
-        let dx = min.x + 0.5 * (max.x - min.x)
-        let dy = min.y + 0.5 * (max.y - min.y)
-        let dz = min.z + 0.5 * (max.z - min.z)
-        textNode.pivot = SCNMatrix4MakeTranslation(dx, dy, dz)
-        
-        return textNode
-    }
-    
-    
     
 }
