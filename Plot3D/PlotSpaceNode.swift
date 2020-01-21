@@ -217,8 +217,8 @@ public class PlotSpaceNode: SCNNode {
         setupUnitPlanes(xGridSpacing: xGridSpacing, yGridSpacing: yGridSpacing, zGridSpacing: zGridSpacing, config: config)
         
         // xy grid lines
-        gridLinesHorizontalXY += addGridLines(rootNode: xAxisNode, spacing: yGridSpacing, direction: PlotAxis.x.negativeDirection, color: config.xyGridColor, axisHeight: xAxisHeight, axisLength: yAxisHeight)
-        gridLinesVerticalXY += addGridLines(rootNode: yAxisNode, spacing: xGridSpacing, direction: PlotAxis.x.direction, color: config.xyGridColor, axisHeight: yAxisHeight, axisLength: xAxisHeight)
+        gridLinesHorizontalXY += addGridLines(rootNode: xAxisNode, spacing: yGridSpacing, direction: PlotAxis.x.negativeDirection, color: config.xyGridColor, axisHeight: yAxisHeight, axisLength: xAxisHeight)
+        gridLinesVerticalXY += addGridLines(rootNode: yAxisNode, spacing: xGridSpacing, direction: PlotAxis.x.direction, color: config.xyGridColor, axisHeight: xAxisHeight, axisLength: yAxisHeight)
         // xz grid lines
         gridLinesHorizontalXZ += addGridLines(rootNode: xAxisNode, spacing: zGridSpacing, direction: PlotAxis.z.direction, color: config.xzGridColor, axisHeight: zAxisHeight, axisLength: xAxisHeight)
         gridLinesVerticalXZ += addGridLines(rootNode: zAxisNode, spacing: xGridSpacing, direction: PlotAxis.x.direction, color: config.xzGridColor, axisHeight: xAxisHeight, axisLength: zAxisHeight)
