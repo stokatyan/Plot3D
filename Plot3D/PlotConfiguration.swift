@@ -73,8 +73,8 @@ public struct PlotConfiguration {
     public let planeThickness: CGFloat
     
     public init(xAxisHeight: CGFloat = 7,
-                yAxisHeight: CGFloat = 6,
-                zAxisHeight: CGFloat = 4,
+                yAxisHeight: CGFloat = 7,
+                zAxisHeight: CGFloat = 7,
                 axisRadius: CGFloat = 0.035,
                 gridlineRadius: CGFloat = 0.009,
                 arrowBottomRadius: CGFloat = 0.15,

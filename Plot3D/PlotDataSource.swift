@@ -16,4 +16,13 @@ public protocol PlotDataSource: class {
      - returns: The number of points to plot.
      */
     func numberOfPoints() -> Int
+    
+    /**
+     - returns: The total number of all the connections to have betwen plotted points.
+     */
+    func numberOfConnections() -> Int
+}
+
+public extension PlotDataSource {
+    func numberOfConnections() -> Int { return 0 }
 }

@@ -143,6 +143,10 @@ public class PlotSpaceNode: SCNNode {
     /// A dictionary keeping track of which nodes are already highlighted.
     private var highlightedIndexes = [Int:Bool]()
     
+    // Connections
+    private var connectionNodes = [SCNNode]()
+    private var connectionRootNode: SCNNode
+    
     // MARK: - Init
     
     /**
@@ -203,6 +207,7 @@ public class PlotSpaceNode: SCNNode {
         
         plotPointRootNode = SCNNode()
         highlightRootNode = SCNNode()
+        connectionRootNode = SCNNode()
         
         xMax = config.xMax
         yMax = config.yMax
@@ -232,6 +237,7 @@ public class PlotSpaceNode: SCNNode {
         
         addChildNode(plotPointRootNode)
         addChildNode(highlightRootNode)
+        addChildNode(connectionRootNode)
     }
     
     required init?(coder: NSCoder) {
@@ -425,6 +431,22 @@ public class PlotSpaceNode: SCNNode {
     
     // MARK: - Plotting
     
+    func connectPoints(index0: Int, index1: Int) {
+        let node0 = plottedPoints[index0]
+        let node1 = plottedPoints[index1]
+        let diffVector = node1.position - node0.position
+        
+        let connectionLength = CGFloat(diffVector.length())
+        let connectionGeometry = SCNCylinder(radius: 0.02, height: connectionLength)
+        
+        let connectionNode = SCNNode(geometry: connectionGeometry)
+        connectionNode.position = node0.position.midPoint(to: node1.position)
+        connectionNode.eulerAngles = node0.position.eulerAngles(to: node1.position)
+        
+        connectionNodes.append(connectionNode)
+        connectionRootNode.addChildNode(connectionNode)
+    }
+    
     /**
      Calculates the scene coordinate for a value on an axis in a plot space.
      - parameters:
@@ -476,6 +498,27 @@ public class PlotSpaceNode: SCNNode {
     
     // MARK: - Update Plot
     
+    func addNewConnections() {
+        guard let dataSource = dataSource, let delegate = delegate, let plotView = plotView else {
+            return
+        }
+        
+        let currentConnectionCount = connectionNodes.count
+        let additionalConnectionCount = dataSource.numberOfConnections() - currentConnectionCount
+        
+        guard additionalConnectionCount > 0 else {
+            return
+        }
+        
+        let startIndex = currentConnectionCount
+        for index in startIndex..<startIndex+additionalConnectionCount {
+            guard let pointsToConnect = delegate.plot(plotView, pointsToConnectAt: index) else {
+                continue
+            }
+            connectPoints(index0: pointsToConnect.p0, index1: pointsToConnect.p1)
+        }
+    }
+    
     /**
      Plots any points that were added aftter the latest call to `refresh` or `plotNewPoints`.
      
@@ -501,22 +544,21 @@ public class PlotSpaceNode: SCNNode {
         }
     }
     
-    /**
-     Reloads the plotted points using the plot data source and plot delegate.
-     
-     This function is analagous to a `UITableView`'s `reloadData()` function.
-     It will remove all tick marks and all plotted points, and then add new tick marks using its delegate, and plot the new data using the delegate and datasource.
-     */
-    func reloadData() {
-        removeAllPlottedPoints()
-        updateTickMarks()
-        
-        guard let dataSource = dataSource, let delegate = delegate, let plotView = plotView else {
+    func updateConnections(_ numberOfConnections: Int) {
+        guard let delegate = delegate, let plotView = plotView else {
             return
         }
         
-        let numberOfPoints = dataSource.numberOfPoints()
-        guard numberOfPoints > 0 else {
+        for index in 0..<numberOfConnections {
+            guard let pointsToConnect = delegate.plot(plotView, pointsToConnectAt: index) else {
+                continue
+            }
+            connectPoints(index0: pointsToConnect.p0, index1: pointsToConnect.p1)
+        }
+    }
+    
+    func updatePlottedPoints(_ numberOfPoints: Int) {
+        guard let delegate = delegate, let plotView = plotView else {
             return
         }
         
@@ -528,13 +570,40 @@ public class PlotSpaceNode: SCNNode {
     }
     
     /**
+     Reloads the plotted points using the plot data source and plot delegate.
+     
+     This function is analagous to a `UITableView`'s `reloadData()` function.
+     It will remove all tick marks and all plotted points, and then add new tick marks using its delegate, and plot the new data using the delegate and datasource.
+     */
+    func reloadData() {
+        removeAllPlottedPoints()
+        updateTickMarks()
+        
+        guard let dataSource = dataSource else {
+            return
+        }
+        
+        let numberOfPoints = dataSource.numberOfPoints()
+        updatePlottedPoints(numberOfPoints)
+        
+        let numberOfConnections = dataSource.numberOfConnections()
+        updateConnections(numberOfConnections)
+    }
+    
+    /**
      Removes all of the plotted points from the `PlotSpaceNode` and removes all of the nodes stored in `plottedPoints`.
+     Removes all of the connections from the `PlotSpaceNode` and removes all of the nodes stored in `connectionNodes`.
      */
     private func removeAllPlottedPoints() {
         plottedPoints.removeAll()
         plotPointRootNode.removeFromParentNode()
         plotPointRootNode = SCNNode()
         addChildNode(plotPointRootNode)
+        
+        connectionNodes.removeAll()
+        connectionRootNode.removeFromParentNode()
+        connectionRootNode = SCNNode()
+        addChildNode(connectionRootNode)
     }
     
     /**

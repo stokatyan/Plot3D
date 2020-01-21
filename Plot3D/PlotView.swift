@@ -161,6 +161,7 @@ public class PlotView: UIView {
     */
     public func plotNewPoints() {
         plotSpace.plotNewPoints()
+        plotSpace.addNewConnections()
     }
     
     /**
