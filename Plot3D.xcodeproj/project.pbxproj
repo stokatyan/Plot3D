@@ -15,6 +15,7 @@
 		E19D4B1D23C10754000AACBE /* PlotAxis.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19D4B1C23C10754000AACBE /* PlotAxis.swift */; };
 		E19FEE0123AC0AF800C0E68C /* PlotSpaceNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FEE0023AC0AF800C0E68C /* PlotSpaceNode.swift */; };
 		E1A3DD4123D4DBB9009B5498 /* PlotText.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A3DD4023D4DBB9009B5498 /* PlotText.swift */; };
+		E1A3DD4423D6D185009B5498 /* PlotConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A3DD4323D6D185009B5498 /* PlotConnection.swift */; };
 		E1D2863223C593170070797A /* PlotDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D2863123C593170070797A /* PlotDataSource.swift */; };
 		E1D2863423C593240070797A /* PlotDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D2863323C593240070797A /* PlotDelegate.swift */; };
 		E1F9FF7023AB0727003EFA9F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F9FF6F23AB0727003EFA9F /* Extensions.swift */; };
@@ -31,6 +32,7 @@
 		E19D4B1C23C10754000AACBE /* PlotAxis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlotAxis.swift; sourceTree = "<group>"; };
 		E19FEE0023AC0AF800C0E68C /* PlotSpaceNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlotSpaceNode.swift; sourceTree = "<group>"; };
 		E1A3DD4023D4DBB9009B5498 /* PlotText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlotText.swift; sourceTree = "<group>"; };
+		E1A3DD4323D6D185009B5498 /* PlotConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlotConnection.swift; sourceTree = "<group>"; };
 		E1D2863123C593170070797A /* PlotDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlotDataSource.swift; sourceTree = "<group>"; };
 		E1D2863323C593240070797A /* PlotDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlotDelegate.swift; sourceTree = "<group>"; };
 		E1F9FF6F23AB0727003EFA9F /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -68,6 +70,7 @@
 			children = (
 				E104F87623A5B8AF0073D977 /* Plot3D.h */,
 				E19D4B1C23C10754000AACBE /* PlotAxis.swift */,
+				E1A3DD4323D6D185009B5498 /* PlotConnection.swift */,
 				E19D4B1A23C102D9000AACBE /* PlotConfiguration.swift */,
 				E1D2863123C593170070797A /* PlotDataSource.swift */,
 				E1D2863323C593240070797A /* PlotDelegate.swift */,
@@ -163,6 +166,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E104F8A523A6B7C10073D977 /* PlotView.swift in Sources */,
+				E1A3DD4423D6D185009B5498 /* PlotConnection.swift in Sources */,
 				E1D2863423C593240070797A /* PlotDelegate.swift in Sources */,
 				E19D4B1B23C102D9000AACBE /* PlotConfiguration.swift in Sources */,
 				E1A3DD4123D4DBB9009B5498 /* PlotText.swift in Sources */,

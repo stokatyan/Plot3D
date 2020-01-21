@@ -160,7 +160,8 @@ public class PlotView: UIView {
     This function is intended for cases where most of the data has already been plotted, and only a couple of additional points need to be plotted.
     */
     public func plotNewPoints() {
-        plotSpace.plotNewPoints()
+        plotSpace.addNewPlotPoints()
+        plotSpace.addNewConnections()
     }
     
     /**
