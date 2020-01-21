@@ -46,6 +46,11 @@ public class PlotView: UIView {
         }
     }
     
+    /**
+     If `true`, then nodes can be highlighted.  If `false`, then now there are no highlight lines.
+     - note: This does not effect whether or not the plot delegates `didSelectNode` gets called.
+     */
+    public var highlightEnabled = true
     /// If `true`, then more than one plotted point can be highlighted when selected.  If `false`, then only the latest selection is highlighted.
     public var multipleHighlightsEnabled = false
     
@@ -136,10 +141,13 @@ public class PlotView: UIView {
                 if let delegate = delegate {
                     delegate.plot(self, didSelectNode: node, atIndex: node.index)
                 }
-                if !multipleHighlightsEnabled {
-                    plotSpace.removeHighlights()
+                
+                if highlightEnabled {
+                    if !multipleHighlightsEnabled {
+                        plotSpace.removeHighlights()
+                    }
+                    plotSpace.highlightNode(node)
                 }
-                plotSpace.highlightNode(node)
             }
         }
     }
