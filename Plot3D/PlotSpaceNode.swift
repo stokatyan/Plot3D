@@ -431,13 +431,14 @@ public class PlotSpaceNode: SCNNode {
     
     // MARK: - Plotting
     
-    func connectPoints(index0: Int, index1: Int) {
+    func connectPoints(index0: Int, index1: Int, connection: PlotConnection) {
         let node0 = plottedPoints[index0]
         let node1 = plottedPoints[index1]
         let diffVector = node1.position - node0.position
         
         let connectionLength = CGFloat(diffVector.length())
-        let connectionGeometry = SCNCylinder(radius: 0.02, height: connectionLength)
+        let connectionGeometry = SCNCylinder(radius: connection.radius, height: connectionLength)
+        connectionGeometry.materials.first!.diffuse.contents = connection.color
         
         let connectionNode = SCNNode(geometry: connectionGeometry)
         connectionNode.position = node0.position.midPoint(to: node1.position)
@@ -515,7 +516,8 @@ public class PlotSpaceNode: SCNNode {
             guard let pointsToConnect = delegate.plot(plotView, pointsToConnectAt: index) else {
                 continue
             }
-            connectPoints(index0: pointsToConnect.p0, index1: pointsToConnect.p1)
+            let connection = delegate.plot(plotView, connectionAt: index)
+            connectPoints(index0: pointsToConnect.p0, index1: pointsToConnect.p1, connection: connection)
         }
     }
     
@@ -553,7 +555,8 @@ public class PlotSpaceNode: SCNNode {
             guard let pointsToConnect = delegate.plot(plotView, pointsToConnectAt: index) else {
                 continue
             }
-            connectPoints(index0: pointsToConnect.p0, index1: pointsToConnect.p1)
+            let connection = delegate.plot(plotView, connectionAt: index)
+            connectPoints(index0: pointsToConnect.p0, index1: pointsToConnect.p1, connection: connection)
         }
     }
     
