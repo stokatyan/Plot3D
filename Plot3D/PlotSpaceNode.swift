@@ -144,7 +144,9 @@ public class PlotSpaceNode: SCNNode {
     private var highlightedIndexes = [Int:Bool]()
     
     // Connections
+    /// All of the nodes of the connections that are added on the plot.
     private var connectionNodes = [SCNNode]()
+    /// The root node of all of the plotted connections.
     private var connectionRootNode: SCNNode
     
     // MARK: - Init
@@ -431,6 +433,14 @@ public class PlotSpaceNode: SCNNode {
     
     // MARK: - Plotting
     
+    /**
+     Connects the nodes corresponding to the given index.
+     - parameters:
+        - index0: The index of the node where the connection begins.
+        - index1: The index of the node where the connection ends.
+        - connection: The attributes for the connection.
+     
+     */
     func connectPoints(index0: Int, index1: Int, connection: PlotConnection) {
         let node0 = plottedPoints[index0]
         let node1 = plottedPoints[index1]
@@ -499,6 +509,11 @@ public class PlotSpaceNode: SCNNode {
     
     // MARK: - Update Plot
     
+    /**
+     Adds any new connections that might be required after the last call to `PlotNewPoints`.
+     
+     This function is intended for cases where most of the data has already been plotted, and only a relatively lesser amount of additional connections need to be added.
+     */
     func addNewConnections() {
         guard let dataSource = dataSource, let delegate = delegate, let plotView = plotView else {
             return
@@ -522,11 +537,11 @@ public class PlotSpaceNode: SCNNode {
     }
     
     /**
-     Plots any points that were added aftter the latest call to `refresh` or `plotNewPoints`.
+     Plots any points that were added aftter the latest call to `plotNewPoints`.
      
-     This function is intended for cases where most of the data has already been plotted, and only a couple of additional points need to be plotted.
+     This function is intended for cases where most of the data has already been plotted, and only a relatively lesser amount of additional points need to be plotted.
      */
-    func plotNewPoints() {
+    func addNewPlotPoints() {
         guard let dataSource = dataSource, let delegate = delegate, let plotView = plotView else {
             return
         }
@@ -546,7 +561,11 @@ public class PlotSpaceNode: SCNNode {
         }
     }
     
-    func updateConnections(_ numberOfConnections: Int) {
+    /**
+     Reloads all of the connections that need to be added to the plot.
+     - parameter numberOfConnections: The number of connections that need to be added.
+     */
+    func reloadConnections(_ numberOfConnections: Int) {
         guard let delegate = delegate, let plotView = plotView else {
             return
         }
@@ -560,7 +579,11 @@ public class PlotSpaceNode: SCNNode {
         }
     }
     
-    func updatePlottedPoints(_ numberOfPoints: Int) {
+    /**
+    Reloads all of the plot points that need to be added to the plot.
+    - parameter numberOfPoints: The number of points that need to be added.
+    */
+    func reloadPlottedPoints(_ numberOfPoints: Int) {
         guard let delegate = delegate, let plotView = plotView else {
             return
         }
@@ -587,10 +610,10 @@ public class PlotSpaceNode: SCNNode {
         }
         
         let numberOfPoints = dataSource.numberOfPoints()
-        updatePlottedPoints(numberOfPoints)
+        reloadPlottedPoints(numberOfPoints)
         
         let numberOfConnections = dataSource.numberOfConnections()
-        updateConnections(numberOfConnections)
+        reloadConnections(numberOfConnections)
     }
     
     /**
