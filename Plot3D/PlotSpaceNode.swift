@@ -37,12 +37,18 @@ public class PlotSpaceNode: SCNNode {
     /// The geometry of the origin node.
     let originGeometry: SCNGeometry
     
+    /// The root node for the x axis tick marks.
     var xTickMarksNode = SCNNode()
+    /// The root node for the y axis tick marks.
     var yTickMarksNode = SCNNode()
+    /// The root node for the z axis tick marks.
     var zTickMarksNode = SCNNode()
     
+    /// The node for the x axis title.
     var xAxisTitleNode = SCNNode()
+    /// The node for the y axis title.
     var yAxisTitleNode = SCNNode()
+    /// The node for the z axis title.
     var zAxisTitleNode = SCNNode()
     
     // Axis Arrows
@@ -123,6 +129,16 @@ public class PlotSpaceNode: SCNNode {
     /// The `PlotView` that has the scene that this `PlotSpaceNode` is in.
     weak var plotView: PlotView?
     
+    // Highlights
+    /// The radius of each highlight that connects a point to each plane.
+    var highlightRadius: CGFloat = 0.01
+    /// The color of each highlight that connects a point to each plane.
+    var highlightColor: UIColor = .yellow
+    /// The root node of all of the highlight nodes.
+    private var highlightRootNode: SCNNode
+    /// A dictionary keeping track of which nodes are already highlighted.
+    private var highlightedIndexes = [Int:Bool]()
+    
     // MARK: - Init
     
     /**
@@ -180,6 +196,7 @@ public class PlotSpaceNode: SCNNode {
         wallYZNode = SCNNode(geometry: wallYZ)
         
         plotPointRootNode = SCNNode()
+        highlightRootNode = SCNNode()
         
         xMax = config.xMax
         yMax = config.yMax
@@ -187,7 +204,7 @@ public class PlotSpaceNode: SCNNode {
         xMin = config.xMin
         yMin = config.yMin
         zMin = config.zMin
-        
+                
         super.init()
         
         setupAxis(axisHeight: axisHeight)
@@ -208,6 +225,7 @@ public class PlotSpaceNode: SCNNode {
         addWall(plane: .yz, color: config.yzPlaneColor)
         
         addChildNode(plotPointRootNode)
+        addChildNode(highlightRootNode)
     }
     
     required init?(coder: NSCoder) {
@@ -509,6 +527,48 @@ public class PlotSpaceNode: SCNNode {
         addChildNode(plotPointRootNode)
     }
     
+    /**
+     Adds cyclinders that connect the given node to each plane.  Nodes can be highlighted to help the user better see where the node is on the plot.
+     - parameter node: The node that is selected for highlight.
+     */
+    func highlightNode(_ node: PlotPointNode) {
+        guard highlightedIndexes[node.index] != true else {
+            return
+        }
+        
+        highlightedIndexes[node.index] = true
+        let xHighlightGeometry = SCNCylinder(radius: highlightRadius, height: CGFloat(abs(node.position.z)))
+        xHighlightGeometry.materials.first!.diffuse.contents = highlightColor
+        let xHighlightNode = SCNNode(geometry: xHighlightGeometry)
+        xHighlightNode.position = SCNVector3(node.position.x, node.position.y, node.position.z/2)
+        xHighlightNode.eulerAngles = highlightRotation(forAxis: .x)
+        highlightRootNode.addChildNode(xHighlightNode)
+        
+        let yHighlightGeometry = SCNCylinder(radius: highlightRadius, height: CGFloat(abs(node.position.x)))
+        yHighlightGeometry.materials.first!.diffuse.contents = highlightColor
+        let yHighlightNode = SCNNode(geometry: yHighlightGeometry)
+        yHighlightNode.position = SCNVector3(node.position.x/2, node.position.y, node.position.z)
+        yHighlightNode.eulerAngles = highlightRotation(forAxis: .y)
+        highlightRootNode.addChildNode(yHighlightNode)
+        
+        let zHighlightGeometry = SCNCylinder(radius: highlightRadius, height: CGFloat(abs(node.position.y)))
+        zHighlightGeometry.materials.first!.diffuse.contents = highlightColor
+        let zHighlightNode = SCNNode(geometry: zHighlightGeometry)
+        zHighlightNode.position = SCNVector3(node.position.x, node.position.y/2, node.position.z)
+        zHighlightNode.eulerAngles = highlightRotation(forAxis: .z)
+        highlightRootNode.addChildNode(zHighlightNode)
+    }
+    
+    /**
+     Replaces the `highlightRootNode` with a new node that has no children, and removes all of the stored highlighted indexes.
+     */
+    func removeHighlights() {
+        highlightedIndexes.removeAll()
+        highlightRootNode.removeFromParentNode()
+        highlightRootNode = SCNNode()
+        addChildNode(highlightRootNode)
+    }
+    
     // MARK: Update Configuration
     
     /**
@@ -606,6 +666,17 @@ public class PlotSpaceNode: SCNNode {
            return SCNVector3(-Double.pi/2, 0, -Double.pi/2)
         case .z:
             return SCNVector3(-Double.pi/2, Double.pi/2, 0)
+        }
+    }
+    
+    func highlightRotation(forAxis axis: PlotAxis) -> SCNVector3 {
+        switch axis {
+        case .x:
+            return SCNVector3(-Double.pi/2, 0, 0)
+        case .y:
+           return SCNVector3(0, 0, -Double.pi/2)
+        case .z:
+            return SCNVector3(0, 0, 0)
         }
     }
     

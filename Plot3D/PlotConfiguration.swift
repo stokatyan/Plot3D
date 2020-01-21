@@ -84,13 +84,13 @@ public struct PlotConfiguration {
          zMin: CGFloat = 0,
          xyGridColor: UIColor = .red,
          xzGridColor: UIColor = .green,
-         yzGridColor: UIColor = .yellow,
+         yzGridColor: UIColor = .blue,
          xyUnitPlaneColor: UIColor = UIColor.red.withAlphaComponent(0.3),
          xzUnitPlaneColor: UIColor = UIColor.green.withAlphaComponent(0.3),
-         yzUnitPlaneColor: UIColor = UIColor.yellow.withAlphaComponent(0.3),
+         yzUnitPlaneColor: UIColor = UIColor.blue.withAlphaComponent(0.3),
          xyPlaneColor: UIColor = UIColor.red.withAlphaComponent(0.2),
          xzPlaneColor: UIColor = UIColor.green.withAlphaComponent(0.2),
-         yzPlaneColor: UIColor = UIColor.yellow.withAlphaComponent(0.2),
+         yzPlaneColor: UIColor = UIColor.blue.withAlphaComponent(0.2),
          planeThickness: CGFloat = 0.01) {
         
         self.axisRadius = axisRadius

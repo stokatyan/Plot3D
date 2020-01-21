@@ -46,6 +46,29 @@ public class PlotView: UIView {
         }
     }
     
+    /// If `true`, then more than one plotted point can be highlighted when selected.  If `false`, then only the latest selection is highlighted.
+    public var multipleHighlightsEnabled = false
+    
+    /// The radius of each highlight that connects a point to each plane.
+    public var highlightRadius: CGFloat {
+        get {
+            return plotSpace.highlightRadius
+        }
+        set(newValue) {
+            plotSpace.highlightRadius = newValue
+        }
+    }
+    
+    /// The color of each highlight that connects a point to each plane.
+    public var highlightColor: UIColor {
+        get {
+            return plotSpace.highlightColor
+        }
+        set(newValue) {
+            plotSpace.highlightColor = newValue
+        }
+    }
+    
     // MARK: - Init
     
     /**
@@ -106,15 +129,17 @@ public class PlotView: UIView {
      If a plotted node is tapped, the action to be taken is delegated to the assigned `PlotDelegate`.
      */
     @objc func handleTap(sender: UITapGestureRecognizer) {
-        guard let delegate = delegate else {
-            return
-        }
-        
         if sender.state == .ended {
             let location: CGPoint = sender.location(in: sceneView)
             let hits = self.sceneView.hitTest(location, options: nil)
             if let node = hits.first?.node as? PlotPointNode {
-                delegate.plot(self, didSelectNode: node, atIndex: node.index)
+                if let delegate = delegate {
+                    delegate.plot(self, didSelectNode: node, atIndex: node.index)
+                }
+                if !multipleHighlightsEnabled {
+                    plotSpace.removeHighlights()
+                }
+                plotSpace.highlightNode(node)
             }
         }
     }
@@ -145,6 +170,13 @@ public class PlotView: UIView {
     */
     public func reloadData() {
         plotSpace.reloadData()
+    }
+    
+    /**
+     Removes all highlights from the plot space.
+     */
+    public func removeHighlights() {
+        plotSpace.removeHighlights()
     }
         
     // MARK: - Getters
