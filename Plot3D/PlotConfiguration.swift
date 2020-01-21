@@ -13,10 +13,14 @@ import UIKit
  */
 public struct PlotConfiguration {
     
+    /// The height of the cylinder for the x axis.
+    let xAxisHeight: CGFloat
+    /// The height of the cylinder for the y axis.
+    let yAxisHeight: CGFloat
+    /// The height of the cylinder for the z axis.
+    let zAxisHeight: CGFloat
     /// The radius of the each axis line.
     public let axisRadius: CGFloat
-    /// The height of each axis line.
-    public let axisHeight: CGFloat
     /// The radius of each grid line.
     public let gridlineRadius: CGFloat
     /// The bottom radius of the cone that is used to represent an arrow at the end of each axis line.
@@ -68,8 +72,10 @@ public struct PlotConfiguration {
     /// The thickness of each plane.
     public let planeThickness: CGFloat
     
-    public init(axisRadius: CGFloat = 0.035,
-                axisHeight: CGFloat = 7,
+    public init(xAxisHeight: CGFloat = 7,
+                yAxisHeight: CGFloat = 7,
+                zAxisHeight: CGFloat = 3,
+                axisRadius: CGFloat = 0.035,
                 gridlineRadius: CGFloat = 0.009,
                 arrowBottomRadius: CGFloat = 0.15,
                 arrowHeight: CGFloat = 0.3,
@@ -94,7 +100,9 @@ public struct PlotConfiguration {
                 planeThickness: CGFloat = 0.01) {
         
         self.axisRadius = axisRadius
-        self.axisHeight = axisHeight
+        self.xAxisHeight = xAxisHeight
+        self.yAxisHeight = yAxisHeight
+        self.zAxisHeight = zAxisHeight
         self.gridlineRadius = gridlineRadius
         self.arrowBottomRadius = arrowBottomRadius
         self.arrowHeight = arrowHeight
