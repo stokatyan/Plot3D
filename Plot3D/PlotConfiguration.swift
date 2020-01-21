@@ -14,84 +14,84 @@ import UIKit
 public struct PlotConfiguration {
     
     /// The radius of the each axis line.
-    let axisRadius: CGFloat
+    public let axisRadius: CGFloat
     /// The height of each axis line.
-    let axisHeight: CGFloat
+    public let axisHeight: CGFloat
     /// The radius of each grid line.
-    let gridlineRadius: CGFloat
+    public let gridlineRadius: CGFloat
     /// The bottom radius of the cone that is used to represent an arrow at the end of each axis line.
-    let arrowBottomRadius: CGFloat
+    public let arrowBottomRadius: CGFloat
     /// The height of the cone that is used to represent an arrow at the end of each axis line.
-    let arrowHeight: CGFloat
+    public let arrowHeight: CGFloat
     
     /// The interval of graphed units between each gridline on the x-axis.
-    let xTickInterval: CGFloat
+    public let xTickInterval: CGFloat
     /// The interval of graphed units between each gridline on the y-axis.
-    let yTickInterval: CGFloat
+    public let yTickInterval: CGFloat
     /// The interval of graphed units between each gridline on the z-axis.
-    let zTickInterval: CGFloat
+    public let zTickInterval: CGFloat
 
     /// The max value along the x-axis.
-    let xMax: CGFloat
+    public let xMax: CGFloat
     /// The max value along the y-axis.
-    let yMax: CGFloat
+    public let yMax: CGFloat
     /// The max value along the z-axis.
-    let zMax: CGFloat
+    public let zMax: CGFloat
     /// The min value along the x-axis.
-    let xMin: CGFloat
+    public let xMin: CGFloat
     /// The min value along the y-axis.
-    let yMin: CGFloat
+    public let yMin: CGFloat
     /// The min value along the z-axis.
-    let zMin: CGFloat
+    public let zMin: CGFloat
     
     /// The color of the grid lines on the xy plane.
-    let xyGridColor: UIColor
+    public let xyGridColor: UIColor
     /// The color of the grid lines on the xz plane.
-    let xzGridColor: UIColor
+    public let xzGridColor: UIColor
     /// The color of the grid lines on the yz plane.
-    let yzGridColor: UIColor
+    public let yzGridColor: UIColor
     
     /// The color of the unit sized plane adjacent to the origin on the xy plane.
-    let xyUnitPlaneColor: UIColor
+    public let xyUnitPlaneColor: UIColor
     /// The color of the unit sized plane adjacent to the origin on the xz plane.
-    let xzUnitPlaneColor: UIColor
+    public let xzUnitPlaneColor: UIColor
     /// The color of the unit sized plane adjacent to the origin on the yz plane.
-    let yzUnitPlaneColor: UIColor
+    public let yzUnitPlaneColor: UIColor
     
     /// The color of the xy plane.
-    let xyPlaneColor: UIColor
+    public let xyPlaneColor: UIColor
     /// The color of the xz plane.
-    let xzPlaneColor: UIColor
+    public let xzPlaneColor: UIColor
     /// The color of the yz plane.
-    let yzPlaneColor: UIColor
+    public let yzPlaneColor: UIColor
     
     /// The thickness of each plane.
-    let planeThickness: CGFloat
+    public let planeThickness: CGFloat
     
     public init(axisRadius: CGFloat = 0.035,
-         axisHeight: CGFloat = 7,
-         gridlineRadius: CGFloat = 0.009,
-         arrowBottomRadius: CGFloat = 0.15,
-         arrowHeight: CGFloat = 0.3,
-         xTickInterval: CGFloat = 1,
-         yTickInterval: CGFloat = 2,
-         zTickInterval: CGFloat = 2.5,
-         xMax: CGFloat = 15,
-         yMax: CGFloat = 15,
-         zMax: CGFloat = 15,
-         xMin: CGFloat = 0,
-         yMin: CGFloat = 0,
-         zMin: CGFloat = 0,
-         xyGridColor: UIColor = .red,
-         xzGridColor: UIColor = .green,
-         yzGridColor: UIColor = .blue,
-         xyUnitPlaneColor: UIColor = UIColor.red.withAlphaComponent(0.3),
-         xzUnitPlaneColor: UIColor = UIColor.green.withAlphaComponent(0.3),
-         yzUnitPlaneColor: UIColor = UIColor.blue.withAlphaComponent(0.3),
-         xyPlaneColor: UIColor = UIColor.red.withAlphaComponent(0.2),
-         xzPlaneColor: UIColor = UIColor.green.withAlphaComponent(0.2),
-         yzPlaneColor: UIColor = UIColor.blue.withAlphaComponent(0.2),
-         planeThickness: CGFloat = 0.01) {
+                axisHeight: CGFloat = 7,
+                gridlineRadius: CGFloat = 0.009,
+                arrowBottomRadius: CGFloat = 0.15,
+                arrowHeight: CGFloat = 0.3,
+                xTickInterval: CGFloat = 3,
+                yTickInterval: CGFloat = 5,
+                zTickInterval: CGFloat = 3,
+                xMax: CGFloat = 15,
+                yMax: CGFloat = 15,
+                zMax: CGFloat = 15,
+                xMin: CGFloat = 0,
+                yMin: CGFloat = 0,
+                zMin: CGFloat = 0,
+                xyGridColor: UIColor = .white,
+                xzGridColor: UIColor = .white,
+                yzGridColor: UIColor = .white,
+                xyUnitPlaneColor: UIColor = UIColor.white.withAlphaComponent(0.3),
+                xzUnitPlaneColor: UIColor = UIColor.white.withAlphaComponent(0.3),
+                yzUnitPlaneColor: UIColor = UIColor.white.withAlphaComponent(0.3),
+                xyPlaneColor: UIColor = UIColor.lightGray.withAlphaComponent(0.6),
+                xzPlaneColor: UIColor = UIColor.lightGray.withAlphaComponent(0.6),
+                yzPlaneColor: UIColor = UIColor.lightGray.withAlphaComponent(0.6),
+                planeThickness: CGFloat = 0.01) {
         
         self.axisRadius = axisRadius
         self.axisHeight = axisHeight

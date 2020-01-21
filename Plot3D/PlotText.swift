@@ -48,6 +48,24 @@ public struct PlotText {
         
         return textNode
     }
+    
+    /// Creates and returns a new node with a right-aligned `SCNText` geometry that is modified with the instances current properties.
+    var nodeRightAligned: SCNNode {
+        let textGeometry = SCNText(string: text, extrusionDepth: 0)
+        textGeometry.flatness = flatness
+        textGeometry.font = UIFont(name: fontName, size: fontSize)
+        textGeometry.materials.first!.diffuse.contents = textColor
+        
+        let textNode = SCNNode(geometry: textGeometry)
+        
+        let (min, max) = (textGeometry.boundingBox.min, textGeometry.boundingBox.max)
+        let dx = min.x + 1 * (max.x - min.x)
+        let dy = min.y + 0.5 * (max.y - min.y)
+        let dz = min.z + 0.5 * (max.z - min.z)
+        textNode.pivot = SCNMatrix4MakeTranslation(dx, dy, dz)
+        
+        return textNode
+    }
 
     /**
      Initializes a `PlotText` object which can be used to generate nodes with centered text.
@@ -60,7 +78,7 @@ public struct PlotText {
         - offset: An amount to offset the text node by.  The offset is directionless, and whatever is charge of plotting the text will determine the direction of the offset.
     */
     public init(text: String,
-                textColor: UIColor = .lightText,
+                textColor: UIColor = .white,
                 fontName: String = "AppleSDGothicNeo-UltraLight",
                 fontSize: CGFloat = 0.5,
                 flatness: CGFloat = 0.001,

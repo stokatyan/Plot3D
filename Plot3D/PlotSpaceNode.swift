@@ -353,7 +353,7 @@ public class PlotSpaceNode: SCNNode {
             guard let text = delegate.plot(plotView!, textAtTickMark: index, forAxis: .y) else {
                 continue
             }
-            let textNode = text.node
+            let textNode = text.nodeRightAligned
             textNode.eulerAngles = tickMarkTextRotation(forAxis: .y)
             textNode.position = SCNVector3(0, CGFloat(position), axisHeight + text.offset)
             yTickMarksNode.addChildNode(textNode)
