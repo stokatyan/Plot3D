@@ -528,10 +528,11 @@ public class PlotSpaceNode: SCNNode {
         
         let startIndex = currentConnectionCount
         for index in startIndex..<startIndex+additionalConnectionCount {
-            guard let pointsToConnect = delegate.plot(plotView, pointsToConnectAt: index) else {
+            guard let pointsToConnect = delegate.plot(plotView, pointsToConnectAt: index),
+                let connection = delegate.plot(plotView, connectionAt: index)
+                else {
                 continue
             }
-            let connection = delegate.plot(plotView, connectionAt: index)
             connectPoints(index0: pointsToConnect.p0, index1: pointsToConnect.p1, connection: connection)
         }
     }
@@ -566,15 +567,16 @@ public class PlotSpaceNode: SCNNode {
      - parameter numberOfConnections: The number of connections that need to be added.
      */
     func reloadConnections(_ numberOfConnections: Int) {
-        guard let delegate = delegate, let plotView = plotView else {
+        guard let delegate = delegate, let plotView = plotView, numberOfConnections > 0 else {
             return
         }
         
         for index in 0..<numberOfConnections {
-            guard let pointsToConnect = delegate.plot(plotView, pointsToConnectAt: index) else {
+            guard let pointsToConnect = delegate.plot(plotView, pointsToConnectAt: index),
+                let connection = delegate.plot(plotView, connectionAt: index)
+                else {
                 continue
             }
-            let connection = delegate.plot(plotView, connectionAt: index)
             connectPoints(index0: pointsToConnect.p0, index1: pointsToConnect.p1, connection: connection)
         }
     }
@@ -584,7 +586,7 @@ public class PlotSpaceNode: SCNNode {
     - parameter numberOfPoints: The number of points that need to be added.
     */
     func reloadPlottedPoints(_ numberOfPoints: Int) {
-        guard let delegate = delegate, let plotView = plotView else {
+        guard let delegate = delegate, let plotView = plotView, numberOfPoints > 0 else {
             return
         }
         

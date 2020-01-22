@@ -22,7 +22,7 @@ public protocol PlotDelegate: class {
       - returns:
       A `PlotConnection` which can be used to set the attributes of the connection's geometry.
      */
-    func plot(_ plotView: PlotView, connectionAt index: Int) -> PlotConnection
+    func plot(_ plotView: PlotView, connectionAt index: Int) -> PlotConnection?
     
     /**
      The method that delegates the hnadling of a tapped node..
@@ -80,7 +80,7 @@ public protocol PlotDelegate: class {
 // MARK: - Default Implementations
 
 public extension PlotDelegate {
-    func plot(_ plotView: PlotView, connectionAt index: Int) -> PlotConnection {return PlotConnection()}
+    func plot(_ plotView: PlotView, connectionAt index: Int) -> PlotConnection? {return nil}
     func plot(_ plotView: PlotView, didSelectNode node: PlotPointNode, atIndex index: Int) {}
     func plot(_ plotView: PlotView, pointsToConnectAt index: Int) -> (p0: Int, p1: Int)? {return nil}
     func plot(_ plotView: PlotView, textAtTickMark index: Int, forAxis axis: PlotAxis) -> PlotText? {return nil}

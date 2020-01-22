@@ -14,63 +14,63 @@ import UIKit
 public struct PlotConfiguration {
     
     /// The height of the cylinder for the x axis.
-    let xAxisHeight: CGFloat
+    public var xAxisHeight: CGFloat
     /// The height of the cylinder for the y axis.
-    let yAxisHeight: CGFloat
+    public var yAxisHeight: CGFloat
     /// The height of the cylinder for the z axis.
-    let zAxisHeight: CGFloat
+    public var zAxisHeight: CGFloat
     /// The radius of the each axis line.
-    public let axisRadius: CGFloat
+    public var axisRadius: CGFloat
     /// The radius of each grid line.
-    public let gridlineRadius: CGFloat
+    public var gridlineRadius: CGFloat
     /// The bottom radius of the cone that is used to represent an arrow at the end of each axis line.
-    public let arrowBottomRadius: CGFloat
+    public var arrowBottomRadius: CGFloat
     /// The height of the cone that is used to represent an arrow at the end of each axis line.
-    public let arrowHeight: CGFloat
+    public var arrowHeight: CGFloat
     
     /// The interval of graphed units between each gridline on the x-axis.
-    public let xTickInterval: CGFloat
+    public var xTickInterval: CGFloat
     /// The interval of graphed units between each gridline on the y-axis.
-    public let yTickInterval: CGFloat
+    public var yTickInterval: CGFloat
     /// The interval of graphed units between each gridline on the z-axis.
-    public let zTickInterval: CGFloat
+    public var zTickInterval: CGFloat
 
     /// The max value along the x-axis.
-    public let xMax: CGFloat
+    public var xMax: CGFloat
     /// The max value along the y-axis.
-    public let yMax: CGFloat
+    public var yMax: CGFloat
     /// The max value along the z-axis.
-    public let zMax: CGFloat
+    public var zMax: CGFloat
     /// The min value along the x-axis.
-    public let xMin: CGFloat
+    public var xMin: CGFloat
     /// The min value along the y-axis.
-    public let yMin: CGFloat
+    public var yMin: CGFloat
     /// The min value along the z-axis.
-    public let zMin: CGFloat
+    public var zMin: CGFloat
     
     /// The color of the grid lines on the xy plane.
-    public let xyGridColor: UIColor
+    public var xyGridColor: UIColor
     /// The color of the grid lines on the xz plane.
-    public let xzGridColor: UIColor
+    public var xzGridColor: UIColor
     /// The color of the grid lines on the yz plane.
-    public let yzGridColor: UIColor
+    public var yzGridColor: UIColor
     
     /// The color of the unit sized plane adjacent to the origin on the xy plane.
-    public let xyUnitPlaneColor: UIColor
+    public var xyUnitPlaneColor: UIColor
     /// The color of the unit sized plane adjacent to the origin on the xz plane.
-    public let xzUnitPlaneColor: UIColor
+    public var xzUnitPlaneColor: UIColor
     /// The color of the unit sized plane adjacent to the origin on the yz plane.
-    public let yzUnitPlaneColor: UIColor
+    public var yzUnitPlaneColor: UIColor
     
     /// The color of the xy plane.
-    public let xyPlaneColor: UIColor
+    public var xyPlaneColor: UIColor
     /// The color of the xz plane.
-    public let xzPlaneColor: UIColor
+    public var xzPlaneColor: UIColor
     /// The color of the yz plane.
-    public let yzPlaneColor: UIColor
+    public var yzPlaneColor: UIColor
     
     /// The thickness of each plane.
-    public let planeThickness: CGFloat
+    public var planeThickness: CGFloat
     
     public init(xAxisHeight: CGFloat = 7,
                 yAxisHeight: CGFloat = 7,
