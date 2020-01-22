@@ -40,8 +40,6 @@ plotView.setAxisTitle(.x, text: "x axis", textColor: .white)
 plotView.setAxisTitle(.y, text: "y axis", textColor: .white)
 plotView.setAxisTitle(.z, text: "z axis", textColor: .white)
 ```
-
-Implementing the data source and delegate:
 ```swift
 extension ViewController: PlotDataSource {
     func numberOfPoints() -> Int {
