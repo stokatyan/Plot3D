@@ -13,14 +13,14 @@ pod 'Plot3d'
 
 ## Usage
 
-### Single Digits
+### PlotView
 <img src="https://github.com/stokatyan/ReadMeMedia/blob/master/Plot3d/PlotView-0.gif"/>
-A scene for a 3d plot can be created and added to a `UIViewController much like a standard `UIView`:
+A scene for a 3d plot can be created and added to a view controller much using a `PlotView`:
 
 ```swift
 /// Initialize a view containing a 3-D plot with the given frame and a default configuration.
 let plotView = PlotView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height),
                         configuration: PlotConfiguration())
-/// Add `plotView` as a subview of the `UIViewController`'s view.
+/// A PlotView is child of UIView, so add it as a subview.
 view.addSubview(plotView)
 ```
