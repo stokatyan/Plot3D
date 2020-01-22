@@ -138,15 +138,15 @@ public class PlotView: UIView {
             let location: CGPoint = sender.location(in: sceneView)
             let hits = self.sceneView.hitTest(location, options: nil)
             if let node = hits.first?.node as? PlotPointNode {
-                if let delegate = delegate {
-                    delegate.plot(self, didSelectNode: node, atIndex: node.index)
-                }
-                
                 if highlightEnabled {
                     if !multipleHighlightsEnabled {
                         plotSpace.removeHighlights()
                     }
                     plotSpace.highlightNode(node)
+                }
+                
+                if let delegate = delegate {
+                    delegate.plot(self, didSelectNode: node, atIndex: node.index)
                 }
             }
         }
