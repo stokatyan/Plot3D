@@ -500,7 +500,7 @@ public class PlotSpaceNode: SCNNode {
      - returns: an optional reference to the `SCNNode` that is plotted at the given index.
      */
     func plottedPoint(atIndex index: Int) -> SCNNode? {
-        guard index < plottedPoints.count else {
+        guard index < plottedPoints.count, index >= 0 else {
             return nil
         }
         
