@@ -12,6 +12,9 @@ pod 'Plot3d'
 ```
 
 ## Usage
+Plot3d is a framework for plotting data in 3d.  The data is plotted using SceneKit and the entire scene is contained in a PlotView, which is a subclass of a UIView.  A PlotView generates a 3d plot using a data source and delegate pattern similar to a UITableView, and so the learning curve is hopefully not too bad.
+
+Checkout [this Medium article](https://medium.com/@tokat.shant/scrollcounter-an-ios-solution-to-the-robinhood-number-animation-bbcbd8c90355) for a more detailed example on how to use Plot3d.
 
 ### PlotView
 <img src="https://github.com/stokatyan/ReadMeMedia/blob/master/Plot3d/PlotView-0.gif"/>
